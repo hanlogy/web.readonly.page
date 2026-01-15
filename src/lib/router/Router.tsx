@@ -5,7 +5,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { LocationContext, NavigateContext } from './contexts';
-import type { Location } from './definitions';
+import type { Location } from './types';
 import { isSameLocation, locationToUrl, readLocation } from './helpers';
 
 export function Router({ children }: PropsWithChildren) {

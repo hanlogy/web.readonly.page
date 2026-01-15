@@ -1,4 +1,4 @@
-import type { Location } from './definitions';
+import type { Location } from './types';
 
 export function locationToUrl(location: Location) {
   return [

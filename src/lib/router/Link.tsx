@@ -1,5 +1,5 @@
 import type { PropsWithChildren, MouseEvent } from 'react';
-import type { Location } from './definitions';
+import type { Location } from './types';
 import { locationToUrl } from './helpers';
 import { useNavigate } from './hooks';
 

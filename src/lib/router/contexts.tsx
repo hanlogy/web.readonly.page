@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { Location } from './definitions';
+import type { Location } from './types';
 
 export const LocationContext = createContext<Location | null>(null);
 
