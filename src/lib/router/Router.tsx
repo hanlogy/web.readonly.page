@@ -48,10 +48,11 @@ export function Router({ children }: PropsWithChildren) {
 
       const url = pathToUrl(target);
       const currentIndex = window.history.state?.index ?? 0;
+
       if (replace) {
         window.history.replaceState({ index: currentIndex }, '', url);
       } else {
-        window.history.pushState({}, '', url);
+        window.history.pushState({ index: currentIndex + 1 }, '', url);
       }
 
       emitPathChange();
