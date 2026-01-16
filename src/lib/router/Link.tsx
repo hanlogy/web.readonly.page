@@ -1,9 +1,9 @@
 import type { PropsWithChildren, MouseEvent } from 'react';
-import type { Location } from './types';
-import { locationToUrl } from './helpers';
+import { pathToUrl } from './helpers';
 import { useNavigate } from './hooks';
+import type { Path } from './types';
 
-export function Link({ children, to }: PropsWithChildren<{ to: Location }>) {
+export function Link({ children, to }: PropsWithChildren<{ to: Path }>) {
   const navigate = useNavigate();
 
   const handleLink = (e: MouseEvent<HTMLAnchorElement>) => {
@@ -12,7 +12,7 @@ export function Link({ children, to }: PropsWithChildren<{ to: Location }>) {
   };
 
   return (
-    <a href={locationToUrl(to)} onClick={handleLink}>
+    <a href={pathToUrl(to)} onClick={handleLink}>
       {children}
     </a>
   );

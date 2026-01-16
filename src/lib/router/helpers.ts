@@ -1,21 +1,17 @@
-import type { Location } from './types';
+import type { PartialPath, Path } from './types';
 
-export function locationToUrl(location: Location) {
-  return [
-    location.pathname.replace(/#*$/, ''),
-    location.hash?.replace(/^#*/, ''),
-  ]
-    .filter(Boolean)
-    .join('#');
+export function pathToUrl({ pathname, search, hash }: PartialPath): string {
+  return [pathname, search, hash].filter(Boolean).join('');
 }
 
-export function readLocation(): Location {
+export function readPath(): Path {
   return {
     pathname: window.location.pathname,
-    hash: window.location.hash.replace(/^#*/, ''),
+    search: window.location.search,
+    hash: window.location.hash,
   };
 }
 
-export function isSameLocation(A: Location, B: Location) {
-  return locationToUrl(A) === locationToUrl(B);
+export function isSamePath(A: PartialPath, B: PartialPath) {
+  return pathToUrl(A) === pathToUrl(B);
 }

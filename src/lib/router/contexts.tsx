@@ -1,8 +1,9 @@
 import { createContext } from 'react';
-import type { Location } from './types';
+import type { Path, NavigateContextValue } from './types';
 
-export const LocationContext = createContext<Location | null>(null);
+// We only have path information in LocationContext now, we might add more
+// information similar to ReactRouter:
+// https://api.reactrouter.com/v7/interfaces/react_router.Location.html
+export const LocationContext = createContext<Path | null>(null);
 
-export const NavigateContext = createContext<
-  ((location: Location) => void) | null
->(null);
+export const NavigateContext = createContext<NavigateContextValue | null>(null);
