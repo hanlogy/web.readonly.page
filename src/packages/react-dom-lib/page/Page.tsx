@@ -13,21 +13,24 @@ export function Page({
   bottomBar,
   withVerticalPadding = true,
   withHorizontalPadding = true,
+  withAppBarBorder = true,
 }: PropsWithChildren<{
   readonly title?: ReactNode;
   readonly actions?: ReactNode;
   readonly centerTitle?: boolean;
-  readonly navigateBackButton?: string;
+  readonly navigateBackButton?: ReactNode;
   readonly useCloseButton?: boolean;
   readonly bottomBar?: ReactNode;
   readonly withVerticalPadding?: boolean;
   readonly withHorizontalPadding?: boolean;
+  readonly withAppBarBorder?: boolean;
 }>) {
   let appBar: ReactNode | undefined;
 
   if (title || actions || navigateBackButton) {
     appBar = (
       <AppBar
+        withBorder={withAppBarBorder}
         actions={actions}
         leading={navigateBackButton}
         centerTitle={centerTitle}

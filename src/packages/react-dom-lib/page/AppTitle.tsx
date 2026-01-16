@@ -5,7 +5,10 @@ export function AppTitle({ children }: PropsWithChildren) {
   // Font: 22/28
   // We use a bit smaller text
   return (
-    <div className="text-xl text-gray-700" data-role="app-title-component">
+    <div
+      className="contents text-xl text-gray-700"
+      data-role="app-title-component"
+    >
       {children}
     </div>
   );
