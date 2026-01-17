@@ -1,5 +1,7 @@
 export { IconContainer, type IconSize } from './IconContainer';
 export { FlexCenter, InlineFlexCenter } from './centers';
+export { Dropdown } from './Dropdown';
+export { DropdownMenu } from './DropdownMenu';
 
 // buttons
 export { Button } from './buttons/Button';
