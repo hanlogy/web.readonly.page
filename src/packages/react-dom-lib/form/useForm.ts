@@ -125,7 +125,7 @@ export const useForm = <T>() => {
     [applyValueChange]
   );
 
-  const initializeValues = useCallback(
+  const setInitialValues = useCallback(
     (
       data: Partial<T>,
       {
@@ -273,7 +273,7 @@ export const useForm = <T>() => {
     getValues,
     register,
     setFieldValue,
-    initializeValues,
+    setInitialValues,
     setFieldError,
     setFormError,
     setFormErrorListener,
