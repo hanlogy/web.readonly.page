@@ -1,19 +1,23 @@
-// Align with the native URL API.
+// Warning: It does not align with the native URL Object
 export interface Path {
   readonly pathname: string;
-  // includes "?" or ""
-  readonly search: string;
-  // includes "#" or ""
-  readonly hash: string;
-}
 
-export type PartialPath = Partial<Path> & Pick<Path, 'pathname'>;
+  /**
+   *  `search` does not have leading "?"
+   */
+  readonly search?: string;
+
+  /**
+   * `hash` does not have leading "#"
+   */
+  readonly hash?: string;
+}
 
 export interface NavigateOptions {
   readonly replace?: boolean;
 }
 
 export type NavigateContextValue = (
-  target: PartialPath | number,
+  target: Path | number,
   options?: NavigateOptions
 ) => void;

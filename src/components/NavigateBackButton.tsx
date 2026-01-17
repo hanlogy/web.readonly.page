@@ -1,9 +1,9 @@
 import { XIcon } from 'lucide-react';
 import { useNavigateBack } from '@/lib/router';
-import type { PartialPath } from '@/lib/router/types';
+import type { Path } from '@/lib/router/types';
 import { IconButton } from '@/packages/react-dom-lib';
 
-export function NavigateBackButton({ path }: { path: PartialPath }) {
+export function NavigateBackButton({ path }: { path: Path }) {
   const navigateBack = useNavigateBack();
 
   return (

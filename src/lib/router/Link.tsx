@@ -3,7 +3,11 @@ import { pathToUrl } from './helpers';
 import { useNavigate } from './hooks';
 import type { Path } from './types';
 
-export function Link({ children, to }: PropsWithChildren<{ to: Path }>) {
+export function Link({
+  children,
+  to,
+  className,
+}: PropsWithChildren<{ to: Path; className?: string }>) {
   const navigate = useNavigate();
 
   const handleLink = (e: MouseEvent<HTMLAnchorElement>) => {
@@ -12,7 +16,7 @@ export function Link({ children, to }: PropsWithChildren<{ to: Path }>) {
   };
 
   return (
-    <a href={pathToUrl(to)} onClick={handleLink}>
+    <a href={pathToUrl(to)} onClick={handleLink} className={className}>
       {children}
     </a>
   );

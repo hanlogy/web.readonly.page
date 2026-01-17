@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { LocationContext, NavigateContext } from './contexts';
-import type { PartialPath } from './types';
+import type { Path } from './types';
 
 export function useLocation() {
   const value = useContext(LocationContext);
@@ -25,7 +25,7 @@ export function useNavigate() {
 export function useNavigateBack() {
   const navigate = useNavigate();
 
-  return (path: PartialPath) => {
+  return (path: Path) => {
     if (window.history.state && window.history.state.index > 0) {
       navigate(-1);
     } else {

@@ -4,6 +4,14 @@ describe('pathToUrl', () => {
   test('hash is undefined', () => {
     expect(pathToUrl({ pathname: '/' })).toBe('/');
   });
+
+  test('hash is #', () => {
+    expect(pathToUrl({ pathname: '/', hash: '#' })).toBe('/');
+  });
+
+  test('multiple #', () => {
+    expect(pathToUrl({ pathname: '/', hash: '####foo' })).toBe('/#foo');
+  });
 });
 
 describe('isSamePath', () => {
