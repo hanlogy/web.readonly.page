@@ -20,13 +20,13 @@ root.render(
 
     root.render(
       <StrictMode>
-        <DialogProvider>
-          <Router>
-            <StoreProvider resources={resources}>
+        <Router>
+          <StoreProvider resources={resources}>
+            <DialogProvider>
               <App />
-            </StoreProvider>
-          </Router>
-        </DialogProvider>
+            </DialogProvider>
+          </StoreProvider>
+        </Router>
       </StrictMode>
     );
   } catch {

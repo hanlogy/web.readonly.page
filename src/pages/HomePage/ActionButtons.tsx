@@ -1,7 +1,6 @@
 import {
   CirclePlusIcon,
   EllipsisVerticalIcon,
-  EraserIcon,
   MonitorDownIcon,
   MonitorUpIcon,
 } from 'lucide-react';
@@ -11,7 +10,10 @@ import {
   clsx,
   DropdownMenu,
   IconButton,
+  useDialog,
 } from '@/packages/react-dom-lib';
+import { ExportStoreDialog } from './ExportStoreDialog';
+import { ImportStoreDialog } from './ImportStoreDialog';
 
 const dropdownOptions = [
   {
@@ -24,15 +26,11 @@ const dropdownOptions = [
     value: 'import',
     icon: <MonitorUpIcon className="h-4 w-4" />,
   },
-  {
-    label: 'Clear Pages',
-    value: 'erase',
-    icon: <EraserIcon className="h-4 w-4" />,
-  },
 ] as const;
 
 export function ActionButtons() {
   const navigate = useNavigate();
+  const { openDialog } = useDialog();
 
   const gotoAddEntryPage = () => {
     navigate({ pathname: '/resource-editor' });
@@ -52,7 +50,18 @@ export function ActionButtons() {
       </div>
       <DropdownMenu
         onSelect={(e) => {
-          console.log(e);
+          switch (e) {
+            case 'export':
+              openDialog(({ closeDialog }) => (
+                <ExportStoreDialog closeDialog={closeDialog} />
+              ));
+              break;
+            case 'import':
+              openDialog(({ closeDialog }) => (
+                <ImportStoreDialog closeDialog={closeDialog} />
+              ));
+              break;
+          }
         }}
         button={(show, isShown) => {
           return (

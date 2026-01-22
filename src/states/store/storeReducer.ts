@@ -9,6 +9,10 @@ export type StoreAction =
   | {
       type: 'deleteResource';
       payload: string;
+    }
+  | {
+      type: 'importResource';
+      payload: readonly Resource[];
     };
 
 export function storeReducer(
@@ -34,6 +38,12 @@ export function storeReducer(
       return {
         ...state,
         resources: resources.filter((e) => e.id !== payload),
+      };
+    }
+    case 'importResource': {
+      return {
+        ...state,
+        resources: payload,
       };
     }
   }
