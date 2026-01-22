@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import clsx from 'clsx';
+import { clsx } from '../clsx';
 import { SafeArea } from './SafeArea';
 
 export const BottomBar = ({
@@ -17,7 +17,7 @@ export const BottomBar = ({
       <SafeArea top={false}>
         <div
           className={clsx('h-16 px-1', {
-            'mt-[-1px]': withBorder,
+            '-mt-px': withBorder,
           })}
         >
           {children}

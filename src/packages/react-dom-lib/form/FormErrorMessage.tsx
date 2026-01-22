@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import clsx from 'clsx';
+import { clsx } from '../clsx';
 import type { FormErrorListener } from './types';
 
-export const FormErrorMessage = ({
+export function FormErrorMessage({
   setListener,
   className,
 }: {
   setListener: (listener: FormErrorListener) => void;
   className?: string;
-}) => {
+}) {
   const [error, setError] = useState<string | undefined>(undefined);
   useEffect(() => {
     setListener(setError);
@@ -19,4 +19,4 @@ export const FormErrorMessage = ({
       <div className={clsx('text-center text-red-500', className)}>{error}</div>
     )
   );
-};
+}

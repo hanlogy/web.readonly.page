@@ -1,13 +1,13 @@
 import { FlexCenter } from '../centers';
 import type { CheckoxInputProps } from './types';
 
-export const CheckboxInput = <T,>({
+export function CheckboxInput<T>({
   label,
   onClick,
   readOnly,
   disabled,
   controller: { ref, setValue, name },
-}: CheckoxInputProps<T>) => {
+}: CheckoxInputProps<T>) {
   return (
     <label className="flex pt-2 text-gray-600">
       <FlexCenter className="h-6">
@@ -27,4 +27,4 @@ export const CheckboxInput = <T,>({
       <div>{label}</div>
     </label>
   );
-};
+}

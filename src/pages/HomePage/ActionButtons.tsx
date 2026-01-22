@@ -1,6 +1,35 @@
-import { CirclePlusIcon, EllipsisIcon } from 'lucide-react';
+import {
+  CirclePlusIcon,
+  EllipsisVerticalIcon,
+  EraserIcon,
+  MonitorDownIcon,
+  MonitorUpIcon,
+} from 'lucide-react';
 import { useNavigate } from '@/lib/router/hooks';
-import { Button, IconButton } from '@/packages/react-dom-lib';
+import {
+  Button,
+  clsx,
+  DropdownMenu,
+  IconButton,
+} from '@/packages/react-dom-lib';
+
+const dropdownOptions = [
+  {
+    label: 'Export Pages',
+    value: 'export',
+    icon: <MonitorDownIcon className="h-4 w-4" />,
+  },
+  {
+    label: 'Import Pages',
+    value: 'import',
+    icon: <MonitorUpIcon className="h-4 w-4" />,
+  },
+  {
+    label: 'Clear Pages',
+    value: 'erase',
+    icon: <EraserIcon className="h-4 w-4" />,
+  },
+] as const;
 
 export function ActionButtons() {
   const navigate = useNavigate();
@@ -21,9 +50,25 @@ export function ActionButtons() {
           Add page
         </Button>
       </div>
-      <IconButton>
-        <EllipsisIcon className="h-full w-full" />
-      </IconButton>
+      <DropdownMenu
+        onSelect={(e) => {
+          console.log(e);
+        }}
+        button={(show, isShown) => {
+          return (
+            <IconButton
+              className={clsx({
+                'bg-gray-200': isShown,
+              })}
+              onClick={() => show()}
+            >
+              <EllipsisVerticalIcon className="h-5 w-5" />
+            </IconButton>
+          );
+        }}
+        alignment="bottomRight"
+        options={dropdownOptions}
+      />
     </div>
   );
 }

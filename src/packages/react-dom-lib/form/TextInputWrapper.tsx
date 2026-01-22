@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
-import clsx from 'clsx';
+import { clsx } from '../clsx';
 import type { TextInputWrapperProps } from './types';
 
 // It is mostly align with M3 design, but still keep some of our design
 // pholosipy
-export const TextInputWrapper = ({
+export function TextInputWrapper({
   label,
   helper,
   error: defaultError,
   children,
   setErrorListener,
-}: TextInputWrapperProps) => {
+}: TextInputWrapperProps) {
   const [error, setError] = useState(defaultError);
 
   useEffect(() => {
@@ -55,4 +55,4 @@ export const TextInputWrapper = ({
       )}
     </div>
   );
-};
+}

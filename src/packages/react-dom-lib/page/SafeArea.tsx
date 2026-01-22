@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import clsx from 'clsx';
 import { checkClassNamesAllowed } from '../checkClassNamesAllowed';
+import { clsx } from '../clsx';
 
 // Be careful while adding more allowed classNames.
 const allowedClassName = ['flex-1', 'h-full'];

@@ -6,7 +6,7 @@ import type {
   FormInitializeValuesOptions,
 } from './types';
 
-export const useForm = <T>() => {
+export function useForm<T>() {
   const registeredRef = useRef<
     Partial<{
       [K in keyof T]: FormFieldRegisterOptions<T> & {
@@ -281,7 +281,7 @@ export const useForm = <T>() => {
     handleSubmit,
     validate,
   };
-};
+}
 
 type UseFormReturn<T> = ReturnType<typeof useForm<T>>;
 

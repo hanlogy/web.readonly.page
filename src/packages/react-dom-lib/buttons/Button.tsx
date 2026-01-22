@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from '../clsx';
 import { IconContainer, type IconSize } from '../IconContainer';
 import type { ButtonProps, ButtonSize } from './types';
 

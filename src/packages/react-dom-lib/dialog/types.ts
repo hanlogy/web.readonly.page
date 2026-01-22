@@ -1,11 +1,11 @@
 import { type ReactNode } from 'react';
 
-export type CloseDialogFn<T = unknown> = (value?: T) => void;
+export type CloseDialogFn<T = unknown> = (value: T) => void;
 
 export type DialogContentBuilder<T> = ({
-  onCloseDialog,
+  closeDialog,
 }: {
-  readonly onCloseDialog: CloseDialogFn<T>;
+  readonly closeDialog: CloseDialogFn<T>;
 }) => ReactNode;
 
 export type DiaglogReturnType<T> = Promise<T | undefined>;

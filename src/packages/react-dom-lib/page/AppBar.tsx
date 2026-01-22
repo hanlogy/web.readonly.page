@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactNode } from 'react';
-import clsx from 'clsx';
+import { clsx } from '../clsx';
 import { SafeArea } from './SafeArea';
 
 // https://m3.material.io/components/app-bars/specs

@@ -1,8 +1,8 @@
-import clsx from 'clsx';
+import { clsx } from '../clsx';
 import { TextInputWrapper } from './TextInputWrapper';
 import type { MultilineTextInputProps } from './types';
 
-export const MultilineTextInput = <T,>({
+export function MultilineTextInput<T>({
   id,
   disabled,
   readOnly,
@@ -12,7 +12,7 @@ export const MultilineTextInput = <T,>({
   rows,
   onClick,
   controller: { ref, setErrorListener, setValue, name },
-}: MultilineTextInputProps<T>) => {
+}: MultilineTextInputProps<T>) {
   return (
     <TextInputWrapper
       setErrorListener={setErrorListener}
@@ -39,4 +39,4 @@ export const MultilineTextInput = <T,>({
       }}
     </TextInputWrapper>
   );
-};
+}

@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
-import clsx from 'clsx';
 import { SafeArea } from './SafeArea';
+import { clsx } from '../clsx';
 
 /**
  * NOTE:

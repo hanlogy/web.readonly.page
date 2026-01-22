@@ -1,5 +1,5 @@
-import clsx from 'clsx';
 import { IconContainer } from '../IconContainer';
+import { clsx } from '../clsx';
 import { Button } from './Button';
 import type { IconButtonProps } from './types';
 

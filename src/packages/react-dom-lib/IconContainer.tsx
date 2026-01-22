@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
-import clsx from 'clsx';
 import { FlexCenter } from './centers';
+import { clsx } from './clsx';
 
 export type IconSize = 'small' | 'medium' | 'large' | 'xlarge';
 

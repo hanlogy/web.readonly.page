@@ -6,7 +6,7 @@ import {
   type PropsWithChildren,
   type ReactNode,
 } from 'react';
-import clsx from 'clsx';
+import { clsx } from '../clsx';
 import { DialogContext } from './DialogContext';
 import type { DiaglogReturnType, DialogContentBuilder } from './types';
 
@@ -30,11 +30,7 @@ export function DialogProvider({ children }: PropsWithChildren) {
     async <T,>(
       contentBuilder: DialogContentBuilder<T>
     ): DiaglogReturnType<T> => {
-      setDialog(
-        contentBuilder({
-          onCloseDialog: closeDialog,
-        })
-      );
+      setDialog(contentBuilder({ closeDialog }));
 
       return new Promise<T | undefined>((r) => {
         resolverRef.current = r as unknown as (value: unknown) => void;

@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
-import clsx from 'clsx';
 import { IconContainer } from '../IconContainer';
 import { FlexCenter } from '../centers';
+import { clsx } from '../clsx';
 import { Dialog } from '../dialog/Dialog';
 import { useDialog } from '../dialog/hooks';
 import type { CloseDialogFn } from '../dialog/types';
@@ -12,7 +12,83 @@ import type {
   SelectInputProps,
 } from './types';
 
-const SelectOptionDialog = <T,>({
+export function SelectInput<T, V>({
+  label,
+  helper,
+  options,
+  placeholder,
+  controller: { ref, setErrorListener, setValue, name },
+  trailingIcon,
+  selectedIcon,
+  unselectedIcon,
+}: SelectInputProps<T, V, string>) {
+  const [localValue, setLocalValue] = useState<V | undefined>();
+  const { openDialog } = useDialog();
+
+  return (
+    <TextInputWrapper
+      setErrorListener={setErrorListener}
+      label={label}
+      helper={helper}
+    >
+      {(className) => {
+        return (
+          <>
+            <input
+              hidden
+              onInput={(v) => {
+                setLocalValue(v.currentTarget.value as V);
+              }}
+              name={name}
+              ref={ref}
+            />
+            <div
+              className="relative cursor-pointer"
+              onClick={async (e) => {
+                e.preventDefault();
+                const result = await openDialog<
+                  SelectInputOption<V> | undefined
+                >(({ closeDialog }) => (
+                  <SelectOptionDialog
+                    value={localValue}
+                    closeDialog={closeDialog}
+                    selectedIcon={selectedIcon}
+                    unselectedIcon={unselectedIcon}
+                    label={label}
+                    options={options}
+                  />
+                ));
+                if (result) {
+                  setLocalValue(result.value);
+                  setValue?.(result.value);
+                }
+              }}
+            >
+              <input
+                className={clsx(
+                  'h-14 w-full cursor-pointer pr-13 pl-3',
+                  className
+                )}
+                defaultValue={
+                  options
+                    .filter((e) => 'value' in e)
+                    .find((e) => e.value === localValue)?.label
+                }
+                placeholder={placeholder}
+                readOnly
+              />
+              <FlexCenter className="absolute top-2 right-1 h-10 w-10">
+                {trailingIcon && <IconContainer>{trailingIcon}</IconContainer>}
+              </FlexCenter>
+            </div>
+          </>
+        );
+      }}
+    </TextInputWrapper>
+  );
+}
+
+function SelectOptionDialog<T>({
   label,
   value: selectedValue,
   options,
@@ -26,7 +102,7 @@ const SelectOptionDialog = <T,>({
   closeDialog: CloseDialogFn<SelectInputOption<T> | undefined>;
   selectedIcon?: ReactNode;
   unselectedIcon?: ReactNode;
-}) => {
+}) {
   return (
     <Dialog title={label} withHorizontalPadding={false}>
       {options.map((option, index) => {
@@ -70,80 +146,4 @@ const SelectOptionDialog = <T,>({
       })}
     </Dialog>
   );
-};
-
-export const SelectInput = <T, V>({
-  label,
-  helper,
-  options,
-  placeholder,
-  controller: { ref, setErrorListener, setValue, name },
-  trailingIcon,
-  selectedIcon,
-  unselectedIcon,
-}: SelectInputProps<T, V, string>) => {
-  const [localValue, setLocalValue] = useState<V | undefined>();
-  const { openDialog } = useDialog();
-
-  return (
-    <TextInputWrapper
-      setErrorListener={setErrorListener}
-      label={label}
-      helper={helper}
-    >
-      {(className) => {
-        return (
-          <>
-            <input
-              hidden
-              onInput={(v) => {
-                setLocalValue(v.currentTarget.value as V);
-              }}
-              name={name}
-              ref={ref}
-            />
-            <div
-              className="relative cursor-pointer"
-              onClick={async (e) => {
-                e.preventDefault();
-                const result = await openDialog<
-                  SelectInputOption<V> | undefined
-                >(({ onCloseDialog }) => (
-                  <SelectOptionDialog
-                    value={localValue}
-                    closeDialog={onCloseDialog}
-                    selectedIcon={selectedIcon}
-                    unselectedIcon={unselectedIcon}
-                    label={label}
-                    options={options}
-                  />
-                ));
-                if (result) {
-                  setLocalValue(result.value);
-                  setValue?.(result.value);
-                }
-              }}
-            >
-              <input
-                className={clsx(
-                  'h-14 w-full cursor-pointer pr-13 pl-3',
-                  className
-                )}
-                defaultValue={
-                  options
-                    .filter((e) => 'value' in e)
-                    .find((e) => e.value === localValue)?.label
-                }
-                placeholder={placeholder}
-                readOnly
-              />
-              <FlexCenter className="absolute top-2 right-1 h-10 w-10">
-                {trailingIcon && <IconContainer>{trailingIcon}</IconContainer>}
-              </FlexCenter>
-            </div>
-          </>
-        );
-      }}
-    </TextInputWrapper>
-  );
-};
+}

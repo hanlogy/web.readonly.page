@@ -1,9 +1,9 @@
-import clsx from 'clsx';
 import { FlexCenter } from '../centers';
+import { clsx } from '../clsx';
 import { TextInputWrapper } from './TextInputWrapper';
 import type { TextInputProps } from './types';
 
-export const TextInput = <T,>({
+export function TextInput<T>({
   id,
   type = 'text',
   disabled,
@@ -16,7 +16,7 @@ export const TextInput = <T,>({
   placeholder,
   onClick,
   controller: { ref, setErrorListener, setValue, name },
-}: TextInputProps<T>) => {
+}: TextInputProps<T>) {
   return (
     <TextInputWrapper
       setErrorListener={setErrorListener}
@@ -64,4 +64,4 @@ export const TextInput = <T,>({
       }}
     </TextInputWrapper>
   );
-};
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import clsx from 'clsx';
+import { clsx } from './clsx';
 
 type Alignment = 'bottomLeft' | 'bottomRight';
 
