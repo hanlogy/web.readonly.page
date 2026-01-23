@@ -16,3 +16,5 @@ export type JsonValue =
  * A JSON object parsed from a string (key-value structure).
  */
 export type JsonRecord = Readonly<Record<string, JsonValue>>;
+
+export type Newable<TInstance> = new (...arguments_: never[]) => TInstance;
