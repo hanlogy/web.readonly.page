@@ -30,3 +30,36 @@ export function isSamePath(
 ): boolean {
   return pathToUrl(pathA) === pathToUrl(pathB);
 }
+
+export function parsePathHash(hash: string): {
+  resources: string[];
+  params: Record<string, string>;
+} {
+  hash = hash.replace(/^#/, '');
+  if (!hash) {
+    return {
+      resources: [],
+      params: {},
+    };
+  }
+  const hashParts = hash.split('#');
+
+  const lastPart = hashParts[hashParts.length - 1];
+  const keyValueRegexp = /(?:^|;)(?<key>[^=;]+)=(?<value>[^;]*)/g;
+  const matches = [...lastPart.matchAll(keyValueRegexp)];
+  const params = matches
+    .map(({ groups }) => {
+      if (!groups) {
+        return undefined;
+      }
+      return [groups.key, groups.value];
+    })
+    .filter((e) => e !== undefined);
+  if (params.length) {
+    hashParts.pop();
+  }
+  return {
+    resources: hashParts,
+    params: Object.fromEntries(params),
+  };
+}
