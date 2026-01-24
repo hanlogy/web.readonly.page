@@ -10,11 +10,15 @@ export function pathToUrl({ pathname, search, hash }: Path): string {
   return `${pathname}${queryString}${hashString}`;
 }
 
-export function readPath(loc: Location = window.location): Path {
+export function readPath(
+  location: Pick<Location, 'pathname' | 'search' | 'hash'> = window.location
+): Path {
+  const fullHash = location.hash.replace(/^#/, '').split('#');
   return {
-    pathname: loc.pathname,
-    search: loc.search.replace(/^\?/, ''),
-    hash: loc.hash.replace(/^#/, ''),
+    pathname: location.pathname,
+    search: location.search.replace(/^\?/, ''),
+    hash: fullHash[0],
+    anchor: fullHash.length > 1 ? fullHash.slice(1).join('#') : '',
   };
 }
 

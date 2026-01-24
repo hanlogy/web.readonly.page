@@ -11,6 +11,11 @@ export interface Path {
    * `hash` does not have leading "#"
    */
   readonly hash?: string;
+
+  /**
+   * `anchor` is the hash of `hash`.
+   */
+  readonly anchor?: string;
 }
 
 export interface NavigateOptions {

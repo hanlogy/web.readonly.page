@@ -7,12 +7,13 @@ import { getResources } from './repositories/localDB';
 import { StoreProvider } from './states/store';
 import './styles/index.css';
 
-const root = createRoot(document.getElementById('root')!);
-root.render(
-  <FlexCenter className="min-h-[80vh] text-gray-600">
-    Initializing...
-  </FlexCenter>
-);
+const container = document.getElementById('root');
+if (!container) {
+  throw new Error('No app root container found');
+}
+
+const root = createRoot(container);
+root.render(<FlexCenter className="min-h-[80vh] text-gray-600"></FlexCenter>);
 
 (async () => {
   try {

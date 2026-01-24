@@ -110,7 +110,7 @@ export function ResourceEditorPage() {
           />
           <div className="pl-3">
             <CheckboxInput
-              label="Is a collection"
+              label="Has sidebar (_sidebar.md)"
               controller={register('isCollection')}
             />
           </div>
@@ -122,7 +122,7 @@ export function ResourceEditorPage() {
             controller={register('description')}
           />
         </div>
-        <div>
+        <div className="hidden">
           <CheckboxInput
             label="Requires auth"
             controller={register('requiresAuth')}
