@@ -1,8 +1,10 @@
 import type { Resource } from '@/definitions/types';
 
-const FILENAME = 'readonly-page.json';
-
-export function downloadStore({ resources }: { resources: readonly Resource[] }) {
+export function downloadStore({
+  resources,
+}: {
+  resources: readonly Resource[];
+}) {
   const normalizeResources = resources.map(
     ({ createdAt, updatedAt, ...rest }) => ({
       ...rest,
@@ -14,6 +16,7 @@ export function downloadStore({ resources }: { resources: readonly Resource[] })
   const json = JSON.stringify(
     {
       version: 1,
+      createdAt: new Date().toLocaleString(),
       resources: normalizeResources,
     },
     null,
@@ -26,7 +29,7 @@ export function downloadStore({ resources }: { resources: readonly Resource[] })
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = FILENAME;
+  a.download = buildFileName();
   a.rel = 'noopener';
 
   document.body.appendChild(a);
@@ -35,4 +38,21 @@ export function downloadStore({ resources }: { resources: readonly Resource[] })
 
   // Cleanup
   URL.revokeObjectURL(url);
+}
+
+function buildFileName() {
+  const dateTime = new Date()
+    .toLocaleString('sv-SE', {
+      hour12: false,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
+    .replaceAll(':', '-')
+    .replaceAll(' ', '_');
+
+  return `ReadonlyPage_${dateTime}.json`;
 }
