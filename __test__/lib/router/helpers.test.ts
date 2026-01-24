@@ -1,4 +1,8 @@
-import { isSamePath, pathToUrl, readPath } from '@/lib/router/helpers';
+import {
+  isSamePath,
+  pathToUrl,
+  readPathFromLocation,
+} from '@/lib/router/helpers';
 
 describe('pathToUrl', () => {
   test('hash is undefined', () => {
@@ -34,10 +38,10 @@ describe('isSamePath', () => {
   });
 });
 
-describe('readPath', () => {
+describe('readPathFromLocation', () => {
   test('only path name', () => {
     expect(
-      readPath({
+      readPathFromLocation({
         pathname: 'htp://example.com',
         search: '',
         hash: '',
@@ -46,52 +50,34 @@ describe('readPath', () => {
       pathname: 'htp://example.com',
       search: '',
       hash: '',
-      anchor: '',
     });
   });
 
   test('with search', () => {
     expect(
-      readPath({
+      readPathFromLocation({
         pathname: 'htp://example.com',
         search: '?name=foo',
         hash: '',
       })
     ).toStrictEqual({
       pathname: 'htp://example.com',
-      search: 'name=foo',
+      search: '?name=foo',
       hash: '',
-      anchor: '',
     });
   });
 
   test('with hash', () => {
     expect(
-      readPath({
+      readPathFromLocation({
         pathname: 'htp://example.com',
         search: '?name=foo',
         hash: '#bar',
       })
     ).toStrictEqual({
       pathname: 'htp://example.com',
-      search: 'name=foo',
-      hash: 'bar',
-      anchor: '',
-    });
-  });
-
-  test('with anchor', () => {
-    expect(
-      readPath({
-        pathname: 'htp://example.com',
-        search: '?name=foo',
-        hash: '#bar#tar#baz',
-      })
-    ).toStrictEqual({
-      pathname: 'htp://example.com',
-      search: 'name=foo',
-      hash: 'bar',
-      anchor: 'tar#baz',
+      search: '?name=foo',
+      hash: '#bar',
     });
   });
 });

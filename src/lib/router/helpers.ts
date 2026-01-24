@@ -1,8 +1,12 @@
 import type { Path } from './types';
 
-export function pathToUrl({ pathname, search, hash }: Path): string {
-  let queryString = search?.replace(/^\?*/, '');
-  let hashString = hash?.replace(/^#*/, '');
+export function pathToUrl({
+  pathname = '',
+  search = '',
+  hash = '',
+}: Partial<Path>): string {
+  let queryString = search.replace(/^\?*/, '');
+  let hashString = hash.replace(/^#*/, '');
 
   queryString = queryString ? `?${queryString}` : '';
   hashString = hashString ? `#${hashString}` : '';
@@ -10,18 +14,19 @@ export function pathToUrl({ pathname, search, hash }: Path): string {
   return `${pathname}${queryString}${hashString}`;
 }
 
-export function readPath(
+export function readPathFromLocation(
   location: Pick<Location, 'pathname' | 'search' | 'hash'> = window.location
 ): Path {
-  const fullHash = location.hash.replace(/^#/, '').split('#');
   return {
     pathname: location.pathname,
-    search: location.search.replace(/^\?/, ''),
-    hash: fullHash[0],
-    anchor: fullHash.length > 1 ? fullHash.slice(1).join('#') : '',
+    search: location.search,
+    hash: location.hash,
   };
 }
 
-export function isSamePath(pathA: Path, pathB: Path): boolean {
+export function isSamePath(
+  pathA: Partial<Path>,
+  pathB: Partial<Path>
+): boolean {
   return pathToUrl(pathA) === pathToUrl(pathB);
 }

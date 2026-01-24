@@ -5,11 +5,11 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { LocationContext, NavigateContext } from './contexts';
-import { isSamePath, pathToUrl, readPath } from './helpers';
+import { isSamePath, pathToUrl, readPathFromLocation } from './helpers';
 import type { Path, NavigateOptions } from './types';
 
 export function Router({ children }: PropsWithChildren) {
-  const [currentPath, setCurrentPath] = useState<Path>(readPath());
+  const [currentPath, setCurrentPath] = useState<Path>(readPathFromLocation());
 
   // Ensure initial history state
   useEffect(() => {
@@ -19,7 +19,7 @@ export function Router({ children }: PropsWithChildren) {
   }, []);
 
   const emitPathChange = useCallback(() => {
-    const next = readPath();
+    const next = readPathFromLocation();
     if (isSamePath(next, currentPath)) {
       return;
     }
