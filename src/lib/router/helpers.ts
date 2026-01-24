@@ -15,7 +15,7 @@ export function pathToUrl({
 }
 
 export function readPathFromLocation(
-  location: Pick<Location, 'pathname' | 'search' | 'hash'> = window.location
+  location: Pick<Path, 'pathname' | 'search' | 'hash'> = window.location
 ): Path {
   return {
     pathname: location.pathname,

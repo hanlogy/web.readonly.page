@@ -1,7 +1,7 @@
 import { useTransition } from 'react';
 import { NavigateBackButton } from '@/components/NavigateBackButton';
 import type { Resource } from '@/definitions/types';
-import { useLocation, useNavigateBack } from '@/lib/router';
+import { usePath, useNavigateBack } from '@/lib/router';
 import {
   Button,
   CheckboxInput,
@@ -23,7 +23,7 @@ interface FormData {
 
 export function ResourceEditorPage() {
   const navigateBack = useNavigateBack();
-  const { hash: resourceId } = useLocation();
+  const { hash: resourceId } = usePath();
   const { register, handleSubmit, setInitialValues } = useForm<FormData>();
   const [isPending, startTransition] = useTransition();
   const { resources } = useStoreState();

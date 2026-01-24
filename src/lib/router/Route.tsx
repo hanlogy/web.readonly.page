@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
-import { useLocation } from './hooks';
+import { usePath } from './hooks';
 
 export function Route({ path, element }: { path: string; element: ReactNode }) {
-  const location = useLocation();
+  const { pathname } = usePath();
 
-  if (path === location.pathname) {
+  if (path === pathname) {
     return element;
   }
 

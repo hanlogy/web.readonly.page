@@ -1,12 +1,12 @@
 import { useContext } from 'react';
-import { LocationContext, NavigateContext } from './contexts';
+import { PathContext, NavigateContext } from './contexts';
 import type { Path } from './types';
 
-export function useLocation() {
-  const value = useContext(LocationContext);
+export function usePath() {
+  const value = useContext(PathContext);
 
   if (!value) {
-    throw new Error('No LocationContext is provided');
+    throw new Error('No PathContext is provided');
   }
 
   return value;

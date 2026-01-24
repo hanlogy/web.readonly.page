@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import type { TocItem } from '@/lib/markdown/types';
-import { useLocation } from '@/lib/router';
+import { usePath } from '@/lib/router';
 import { clsx } from '@/packages/react-dom-lib';
 
 export function TableOfContents({ items }: { items: readonly TocItem[] }) {
-  const { hash, anchor: initialAnchor } = useLocation();
+  const { hash, anchor: initialAnchor } = usePath();
   const [anchor, setAnchor] = useState(initialAnchor);
 
   const jumpTo = (id: string) => {

@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { HouseIcon, Share2Icon } from 'lucide-react';
-import { useLocation, useNavigate } from '@/lib/router';
+import { usePath, useNavigate } from '@/lib/router';
 import { Button, IconButton, Page } from '@/packages/react-dom-lib';
 import { createHttpClient } from '@/packages/ts-lib/http';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -9,7 +9,7 @@ import { getExtension } from './getExtension';
 import { getSidebarUrl } from './getSidebarUrl';
 
 export function ReaderPage({ type }: { type: 'file' | 'collection' }) {
-  const { hash } = useLocation();
+  const { hash } = usePath();
   const navigate = useNavigate();
   const [mainContent, setMainContent] = useState<string>();
   const [sidebarContent, setSidebarContent] = useState<string>();

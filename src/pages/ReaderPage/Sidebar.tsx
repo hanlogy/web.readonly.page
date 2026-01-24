@@ -1,7 +1,7 @@
 import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react';
 import { parseSidebar } from '@/lib/markdown';
 import type { SidebarItem } from '@/lib/markdown/types';
-import { Link, useLocation } from '@/lib/router';
+import { Link, usePath } from '@/lib/router';
 import {
   clsx,
   CollapsibleTree,
@@ -41,7 +41,7 @@ function SidebarButton({
   isCollapsed: boolean;
   url: string;
 }) {
-  const { pathname } = useLocation();
+  const { pathname } = usePath();
 
   return (
     <div

@@ -4,7 +4,7 @@ import {
   useState,
   type PropsWithChildren,
 } from 'react';
-import { LocationContext, NavigateContext } from './contexts';
+import { PathContext, NavigateContext } from './contexts';
 import { isSamePath, pathToUrl, readPathFromLocation } from './helpers';
 import type { Path, NavigateOptions } from './types';
 
@@ -58,8 +58,8 @@ export function Router({ children }: PropsWithChildren) {
   );
 
   return (
-    <LocationContext value={currentPath}>
+    <PathContext value={currentPath}>
       <NavigateContext value={navigate}>{children}</NavigateContext>
-    </LocationContext>
+    </PathContext>
   );
 }
