@@ -20,6 +20,6 @@ export interface NavigateOptions {
 }
 
 export type NavigateContextValue = (
-  target: Path | number,
+  target: (Partial<Path> & Pick<Path, 'pathname'>) | number,
   options?: NavigateOptions
 ) => void;

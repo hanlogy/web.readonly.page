@@ -2,9 +2,15 @@ import { useProcessedDocument } from '@/lib/markdown';
 import { clsx } from '@/packages/react-dom-lib';
 import { TableOfContents } from './TableOfContents';
 
-export function MarkdownViewer({ url, text }: { url: string; text: string }) {
+export function MarkdownViewer({
+  baseUrl,
+  text,
+}: {
+  baseUrl: string;
+  text: string;
+}) {
   const { document, tocItems } = useProcessedDocument({
-    url,
+    baseUrl,
     text,
   });
 

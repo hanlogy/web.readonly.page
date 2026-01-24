@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { PathContext, NavigateContext } from './contexts';
+import { parsePathHash } from './helpers';
 import type { Path } from './types';
 
 export function usePath() {
@@ -10,6 +11,13 @@ export function usePath() {
   }
 
   return value;
+}
+
+// TODO: Parse search into Record when needed.
+export function useParsedPath() {
+  const { hash, ...rest } = usePath();
+
+  return { ...rest, hash: parsePathHash(hash) };
 }
 
 export function useNavigate() {

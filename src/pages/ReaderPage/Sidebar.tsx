@@ -9,7 +9,7 @@ import {
   resolveUrlWithBase,
 } from '@/packages/react-dom-lib';
 
-export function Sidebar({ text, url }: { text: string; url: string }) {
+export function Sidebar({ text, baseUrl }: { text: string; baseUrl: string }) {
   const items = parseSidebar(text);
 
   return (
@@ -17,7 +17,7 @@ export function Sidebar({ text, url }: { text: string; url: string }) {
       <CollapsibleTree
         itemBuilder={(item, isCollapsed, toggleIsCollapsed) => (
           <SidebarButton
-            url={url}
+            baseUrl={baseUrl}
             item={item}
             isCollapsed={isCollapsed}
             toggleIsCollapsed={toggleIsCollapsed}
@@ -34,12 +34,12 @@ function SidebarButton({
   toggleIsCollapsed,
   item,
   isCollapsed,
-  url,
+  baseUrl,
 }: {
   toggleIsCollapsed: VoidFunction;
   item: SidebarItem;
   isCollapsed: boolean;
-  url: string;
+  baseUrl: string;
 }) {
   const { pathname } = usePath();
 
@@ -50,7 +50,7 @@ function SidebarButton({
       <Link
         to={{
           pathname,
-          hash: resolveUrlWithBase({ base: url, url: item.link }),
+          hash: resolveUrlWithBase({ base: baseUrl, url: item.link }),
         }}
         className="flex-1 pl-2 text-gray-500 hover:text-gray-700"
       >

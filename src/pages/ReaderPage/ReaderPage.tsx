@@ -1,87 +1,51 @@
-import { useEffect, useState, type ReactNode } from 'react';
-import { HouseIcon, Share2Icon } from 'lucide-react';
-import { usePath, useNavigate } from '@/lib/router';
-import { Button, IconButton, Page } from '@/packages/react-dom-lib';
-import { createHttpClient } from '@/packages/ts-lib/http';
-import { MarkdownViewer } from './MarkdownViewer';
-import { Sidebar } from './Sidebar';
+import type { ResourceType } from '@/definitions/types';
+import { useParsedPath } from '@/lib/router/hooks';
+import { resolveUrlWithBase } from '@/packages/react-dom-lib';
+import { PageView } from './ReaderView';
 import { getExtension } from './getExtension';
-import { getSidebarUrl } from './getSidebarUrl';
 
-export function ReaderPage({ type }: { type: 'file' | 'collection' }) {
-  const { hash } = usePath();
-  const navigate = useNavigate();
-  const [mainContent, setMainContent] = useState<string>();
-  const [sidebarContent, setSidebarContent] = useState<string>();
+export function ReaderPage({ type }: { type: ResourceType }) {
+  const {
+    hash: { resources: hashResources },
+  } = useParsedPath();
 
-  useEffect(() => {
-    if (!hash) {
-      return;
-    }
+  const notFound = () => <>Page not found</>;
 
-    (async () => {
-      const http = createHttpClient();
+  if (
+    (type !== 'collection' && type !== 'file') ||
+    !hashResources.length ||
+    (type === 'collection' && hashResources.length < 2)
+  ) {
+    return notFound();
+  }
 
-      if (type === 'collection') {
-        const sidebarUrl = getSidebarUrl(hash);
-        const { body: sidebarBody } = await http.get({
-          url: sidebarUrl,
-        });
+  let baseUrl: string;
+  let fileExtension: string | null;
+  let documentUrl: string;
 
-        if (typeof sidebarBody === 'string') {
-          setSidebarContent(sidebarBody);
-        }
-      }
-
-      const { body: mainBody } = await http.get({ url: hash });
-
-      if (typeof mainBody === 'string') {
-        setMainContent(mainBody);
-      }
-    })();
-  }, [hash, setMainContent, type]);
-
-  let mainView: ReactNode;
-
-  if (!hash) {
-    mainView = <>Target url is missing</>;
+  if (type === 'collection') {
+    baseUrl = hashResources[0];
+    fileExtension = getExtension(hashResources[1]);
+    documentUrl = resolveUrlWithBase({
+      base: hashResources[0],
+      url: hashResources[1],
+    });
   } else {
-    const fileExtension = getExtension(hash);
+    baseUrl = hashResources[0].slice(0, hashResources[0].lastIndexOf('/') + 1);
+    fileExtension = getExtension(hashResources[0]);
+    documentUrl = hashResources[0];
+  }
 
-    if (!mainContent) {
-      mainView = <></>;
-    } else if (fileExtension === 'md') {
-      mainView = <MarkdownViewer url={hash} text={mainContent} />;
-    }
+  if (!fileExtension) {
+    return notFound();
   }
 
   return (
-    <Page
-      withVerticalPadding={false}
-      withHorizontalPadding={false}
-      navigateBackButton={
-        <IconButton onClick={() => navigate({ pathname: '/' })}>
-          <HouseIcon />
-        </IconButton>
-      }
-      actions={
-        <>
-          <Button className="text-gray-600" icon={<Share2Icon size={18} />}>
-            Share
-          </Button>
-        </>
-      }
-    >
-      {sidebarContent && hash ? (
-        <>
-          <div className="fixed top-16 bottom-0 left-0 w-76 border-r border-r-gray-200">
-            <Sidebar url={hash} text={sidebarContent} />
-          </div>
-          <div className="ml-76">{mainView}</div>
-        </>
-      ) : (
-        mainView
-      )}
-    </Page>
+    <PageView
+      type={type}
+      baseUrl={baseUrl}
+      documentUrl={documentUrl}
+      fileExtension={fileExtension}
+    />
   );
 }

@@ -14,12 +14,12 @@ import type { TocDepth, TocItem } from './types';
 
 export function useProcessedDocument({
   text,
-  url,
+  baseUrl,
   tocMinDepth = 2,
   tocMaxDepth = 4,
 }: {
   text: string;
-  url: string;
+  baseUrl: string;
   tocMinDepth?: TocDepth;
   tocMaxDepth?: TocDepth;
 }) {
@@ -56,7 +56,7 @@ export function useProcessedDocument({
           .use(collectToc, { minDepth: tocMinDepth, maxDepth: tocMaxDepth })
           // MDAST -> HAST(HTML AST)
           .use(remarkRehype)
-          .use(resolveUrls, { baseUrl: url })
+          .use(resolveUrls, { baseUrl })
           // Pretty code
           .use(rehypePrettyCode)
           // HAST -> React elements
@@ -82,7 +82,7 @@ export function useProcessedDocument({
         }
       }
     })();
-  }, [text, url, tocMaxDepth, tocMinDepth]);
+  }, [text, baseUrl, tocMaxDepth, tocMinDepth]);
 
   return { document, tocItems, loading, error };
 }
