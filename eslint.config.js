@@ -25,6 +25,7 @@ export default defineConfig([
     },
     rules: {
       curly: ["error", "all"],
+      "@typescript-eslint/consistent-type-definitions": "off",
     },
   },
 ]);
