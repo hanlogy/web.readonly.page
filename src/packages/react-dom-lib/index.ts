@@ -1,7 +1,9 @@
 export { IconContainer, type IconSize } from './IconContainer';
 export { FlexCenter, InlineFlexCenter } from './centers';
 export { Dropdown } from './Dropdown';
+export { CollapsibleTree } from './CollapsibleTree';
 export { DropdownMenu } from './DropdownMenu';
+export { resolveUrlWithBase } from './resolveUrlWithBase';
 export { clsx } from './clsx';
 
 // buttons
