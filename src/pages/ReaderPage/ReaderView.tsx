@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { HouseIcon, MenuIcon, Share2Icon, XIcon } from 'lucide-react';
+import { ShareResourceDialog } from '@/components/ShareResourceDialog';
 import type { ResourceType } from '@/definitions/types';
 import { useNavigate } from '@/lib/router';
 import {
@@ -8,6 +9,7 @@ import {
   FlexCenter,
   IconButton,
   Page,
+  useDialog,
 } from '@/packages/react-dom-lib';
 import { createHttpClient } from '@/packages/ts-lib/http';
 import { MarkdownViewer } from './MarkdownViewer';
@@ -19,16 +21,20 @@ export function PageView({
   baseUrl,
   fileExtension,
   documentUrl,
+  filePath,
 }: {
   type: ResourceType;
   baseUrl: string;
   fileExtension: string;
   documentUrl: string;
+  filePath?: string;
 }) {
   const navigate = useNavigate();
   const [mainContent, setMainContent] = useState<string>();
   const [sidebarShown, setSidebarShown] = useState(false);
   const [sidebarContent, setSidebarContent] = useState<string>();
+  const { openDialog } = useDialog();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -45,17 +51,37 @@ export function PageView({
         }
       }
 
-      const { body: mainBody } = await http.get({ url: documentUrl });
+      try {
+        const { status, body: mainBody } = await http.get({ url: documentUrl });
+        if (status < 200 || status > 299) {
+          throw new Error();
+        }
 
-      if (typeof mainBody === 'string') {
-        setMainContent(mainBody);
+        if (typeof mainBody === 'string') {
+          setMainContent(mainBody);
+        }
+      } catch {
+        setError(`Failed to fetch document from ${documentUrl}`);
       }
     })();
   }, [documentUrl, setMainContent, baseUrl, type]);
 
   let mainView: ReactNode;
 
-  if (!mainContent) {
+  if (error) {
+    mainView = (
+      <div className="mt-10 text-center">
+        <div className="text-red-600">{error}</div>
+        <div className="mt-10 mb-5">The reasons could be:</div>
+        <ul className="mx-auto w-fit list-outside list-disc space-y-2 text-left text-gray-600">
+          <li>The document URL is wrong, or the file doesn't exist</li>
+          <li>The server blocks cross-origin requests (CORS)</li>
+          <li>The URL isn't HTTPS (SSL)</li>
+          <li>Access is restricted</li>
+        </ul>
+      </div>
+    );
+  } else if (!mainContent) {
     mainView = <></>;
   } else if (fileExtension === 'md') {
     mainView = <MarkdownViewer baseUrl={baseUrl} text={mainContent} />;
@@ -72,7 +98,30 @@ export function PageView({
       }
       actions={
         <>
-          <Button className="text-gray-600" icon={<Share2Icon size={18} />}>
+          <Button
+            className="text-gray-600"
+            icon={<Share2Icon size={18} />}
+            onClick={() => {
+              openDialog(({ closeDialog }) => (
+                <ShareResourceDialog
+                  resource={
+                    type === 'file'
+                      ? {
+                          type: 'file',
+                          url: documentUrl,
+                        }
+                      : {
+                          type: 'collection',
+                          baseUrl: baseUrl,
+                          // TODO: make it typesafe
+                          file: filePath ?? '',
+                        }
+                  }
+                  closeDialog={closeDialog}
+                />
+              ));
+            }}
+          >
             Share
           </Button>
         </>

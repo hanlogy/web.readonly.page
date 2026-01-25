@@ -6,9 +6,15 @@ import {
 } from 'lucide-react';
 import type { Resource } from '@/definitions/types';
 import { useNavigate } from '@/lib/router';
-import { clsx, DropdownMenu, IconButton } from '@/packages/react-dom-lib';
+import {
+  clsx,
+  DropdownMenu,
+  IconButton,
+  useDialog,
+} from '@/packages/react-dom-lib';
 import { deleteResource } from '@/repositories/localDB';
 import { useStoreDispatch } from '@/states/store';
+import { ShareResourceDialog } from '../ShareResourceDialog';
 import { useConfirmDialog } from '../dialogs/confirmDialog';
 
 const options = [
@@ -29,10 +35,12 @@ const options = [
   },
 ] as const;
 
-export function Actions({ resource: { id, name } }: { resource: Resource }) {
+export function Actions({ resource }: { resource: Resource }) {
   const navigate = useNavigate();
+  const { openDialog } = useDialog();
   const dispatch = useStoreDispatch();
   const openConfirmDialog = useConfirmDialog();
+  const { id, name } = resource;
 
   return (
     <DropdownMenu
@@ -56,6 +64,26 @@ export function Actions({ resource: { id, name } }: { resource: Resource }) {
                 payload: id,
               });
             }
+            break;
+          }
+          case 'share': {
+            openDialog(({ closeDialog }) => (
+              <ShareResourceDialog
+                resource={
+                  resource.type === 'file'
+                    ? {
+                        type: 'file',
+                        url: resource.url,
+                      }
+                    : {
+                        type: 'collection',
+                        baseUrl: resource.baseUrl,
+                        file: resource.entryFile,
+                      }
+                }
+                closeDialog={closeDialog}
+              />
+            ));
             break;
           }
         }

@@ -44,6 +44,7 @@ export function ReaderPage({ type }: { type: ResourceType }) {
     <PageView
       type={type}
       baseUrl={baseUrl}
+      filePath={type === 'collection' ? hashResources[1] : undefined}
       documentUrl={documentUrl}
       fileExtension={fileExtension}
     />
