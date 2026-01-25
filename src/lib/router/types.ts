@@ -15,11 +15,13 @@ export interface Path {
   readonly hash: string;
 }
 
+export type PartialPath = Partial<Path> & Pick<Path, 'pathname'>;
+
 export interface NavigateOptions {
   readonly replace?: boolean;
 }
 
 export type NavigateContextValue = (
-  target: (Partial<Path> & Pick<Path, 'pathname'>) | number,
+  target: PartialPath | number,
   options?: NavigateOptions
 ) => void;

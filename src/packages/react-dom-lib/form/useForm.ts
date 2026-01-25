@@ -15,6 +15,7 @@ export function useForm<T>() {
     }>
   >({});
 
+  const mountedFieldsRef = useRef<Set<keyof T>>(new Set());
   const valuesRef = useRef<Partial<{ [K in keyof T]: T[K] }>>({});
   const initializedRef = useRef<boolean>(false);
   const fieldErrorsRef = useRef<
@@ -161,6 +162,7 @@ export function useForm<T>() {
           }
 
           if (element) {
+            mountedFieldsRef.current.add(field);
             registeredRef.current[field].ref = element;
 
             const valueBuffer = valuesBufferRef.current[field];
@@ -183,6 +185,7 @@ export function useForm<T>() {
               delete detachedValuesRef.current[field];
             }
           } else {
+            mountedFieldsRef.current.delete(field);
             // Move the value into detachedValuesRef when element unmounted, and
             // set the value when this element is put back.
             detachedValuesRef.current[field] = valuesRef.current[field];
@@ -220,12 +223,14 @@ export function useForm<T>() {
     (fields: (keyof T)[] = []) => {
       clearErrors();
 
-      const keysToValidate =
-        fields.length > 0
-          ? fields
-          : (Object.keys(registeredRef.current) as (keyof T)[]);
+      const allKeys = Object.keys(registeredRef.current) as (keyof T)[];
+      const keysToValidate = fields.length > 0 ? fields : allKeys;
 
       for (const field of keysToValidate) {
+        if (!mountedFieldsRef.current.has(field)) {
+          continue;
+        }
+
         const { validator } = registeredRef.current[field] ?? {};
         if (validator) {
           const validateResult = validator(valuesRef.current);
@@ -257,11 +262,15 @@ export function useForm<T>() {
         }
 
         const values = { ...valuesRef.current };
-        const data: Pick<T, K> = fields
-          ? (Object.fromEntries(
-              fields.map((key) => [key, values[key]])
-            ) as Pick<T, K>)
-          : (values as Pick<T, K>);
+        const activeKeys = fields?.length
+          ? fields
+          : (Array.from(mountedFieldsRef.current) as K[]);
+
+        const data = Object.fromEntries(
+          activeKeys
+            .filter((k) => mountedFieldsRef.current.has(k))
+            .map((k) => [k, values[k]])
+        ) as Pick<T, K>;
 
         handler(data);
       }) as F;

@@ -1,13 +1,13 @@
 import { XIcon, ChevronLeftIcon } from 'lucide-react';
 import { useNavigateBack } from '@/lib/router';
-import type { Path } from '@/lib/router/types';
+import type { PartialPath } from '@/lib/router/types';
 import { IconButton } from '@/packages/react-dom-lib';
 
 export function NavigateBackButton({
   path,
   useCloseButton = false,
 }: {
-  path: Path;
+  path: PartialPath;
   useCloseButton?: boolean;
 }) {
   const navigateBack = useNavigateBack();

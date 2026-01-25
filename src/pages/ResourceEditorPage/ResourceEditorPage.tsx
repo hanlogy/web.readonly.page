@@ -1,10 +1,12 @@
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { NavigateBackButton } from '@/components/NavigateBackButton';
-import type { Resource } from '@/definitions/types';
+import type { ResourceType, Resource } from '@/definitions/types';
 import { usePath, useNavigateBack } from '@/lib/router';
 import {
   Button,
+  ButtonGroup,
   CheckboxInput,
+  clsx,
   MultilineTextInput,
   Page,
   TextInput,
@@ -15,36 +17,42 @@ import { useStoreDispatch, useStoreState } from '@/states/store';
 
 interface FormData {
   readonly name: string;
-  readonly url: string;
+  readonly url?: string;
+  readonly baseUrl?: string;
+  readonly entryFile?: string;
   readonly description?: string;
-  readonly isCollection: boolean;
   readonly requiresAuth: boolean;
 }
 
 export function ResourceEditorPage() {
   const navigateBack = useNavigateBack();
-  const { hash: resourceId } = usePath();
+  const { hash } = usePath();
   const { register, handleSubmit, setInitialValues } = useForm<FormData>();
   const [isPending, startTransition] = useTransition();
   const { resources } = useStoreState();
   const dispatch = useStoreDispatch();
+  const resourceId = hash.replace(/^#*/, '');
   const existingResource = resourceId
     ? resources.find((e) => e.id === resourceId)
     : undefined;
+  const [type, setType] = useState<ResourceType>(
+    existingResource?.type ?? 'file'
+  );
 
   const onSubmit = (formData: FormData) => {
     startTransition(async () => {
       let finalData: Resource;
-      const { isCollection, ...formDataRest } = formData;
-      const type = isCollection ? 'collection' : ('file' as const);
       const now = new Date();
+
+      // TODO: Improve type safe later.
       if (existingResource) {
         finalData = {
-          ...existingResource,
-          ...formDataRest,
+          id: existingResource.id,
+          createdAt: existingResource.createdAt,
+          ...formData,
           type,
           updatedAt: now,
-        };
+        } as Resource;
       } else {
         finalData = {
           ...formData,
@@ -52,7 +60,7 @@ export function ResourceEditorPage() {
           id: crypto.randomUUID(),
           createdAt: now,
           updatedAt: now,
-        };
+        } as Resource;
       }
 
       await upsertResource(finalData);
@@ -68,10 +76,7 @@ export function ResourceEditorPage() {
 
   const title = resourceId ? 'Edit page' : 'Add page';
   if (existingResource) {
-    setInitialValues({
-      ...existingResource,
-      isCollection: existingResource.type === 'collection',
-    });
+    setInitialValues(existingResource);
   }
 
   return (
@@ -97,24 +102,78 @@ export function ResourceEditorPage() {
             })}
           />
         </div>
-        <div>
-          <TextInput
-            label="URL"
-            controller={register('url', {
-              validator: ({ url }) => {
-                if (!url?.trim()) {
-                  return 'URL is required';
-                }
-              },
-            })}
+        <div className="mx-auto max-w-100">
+          <ButtonGroup
+            buttonBuilder={({ isSelected, item, isFirst, isLast }) => {
+              return (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setType(item.value);
+                  }}
+                  className={clsx('border border-gray-200 py-2', {
+                    'bg-gray-200 text-gray-800': isSelected,
+                    'text-gray-500': !isSelected,
+                    'rounded-tl-full rounded-bl-full': isFirst,
+                    'rounded-tr-full rounded-br-full': isLast,
+                  })}
+                >
+                  {item.label}
+                </button>
+              );
+            }}
+            value={type}
+            items={
+              [
+                { label: 'Single file', value: 'file' },
+                { label: 'Collection', value: 'collection' },
+              ] as const
+            }
           />
-          <div className="pl-3">
-            <CheckboxInput
-              label="Has sidebar (_sidebar.md)"
-              controller={register('isCollection')}
+        </div>
+        {type === 'collection' ? (
+          <>
+            <div>
+              <TextInput
+                label="Root URL"
+                helper="Folder where _sidebar.md is located"
+                controller={register('baseUrl', {
+                  validator: ({ baseUrl }) => {
+                    if (!baseUrl?.trim()) {
+                      return 'Root URL is required';
+                    }
+                  },
+                })}
+              />
+            </div>
+            <div>
+              <TextInput
+                label="Start page"
+                helper="Relative to Root URL, e.g. README.md or ./README.md"
+                controller={register('entryFile', {
+                  validator: ({ entryFile }) => {
+                    if (!entryFile?.trim()) {
+                      return 'Start page is required';
+                    }
+                  },
+                })}
+              />
+            </div>
+          </>
+        ) : (
+          <div>
+            <TextInput
+              label="Document URL"
+              controller={register('url', {
+                validator: ({ url }) => {
+                  if (!url?.trim()) {
+                    return 'URL is required';
+                  }
+                },
+              })}
             />
           </div>
-        </div>
+        )}
         <div>
           <MultilineTextInput
             rows={4}
