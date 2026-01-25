@@ -6,7 +6,7 @@ import {
 } from 'react';
 import { PathContext, NavigateContext } from './contexts';
 import { isSamePath, pathToUrl, readPathFromLocation } from './helpers';
-import type { Path, NavigateOptions } from './types';
+import type { Path, NavigateOptions, PartialPath } from './types';
 
 export function Router({ children }: PropsWithChildren) {
   const [currentPath, setCurrentPath] = useState<Path>(readPathFromLocation());
@@ -37,7 +37,10 @@ export function Router({ children }: PropsWithChildren) {
   }, [emitPathChange]);
 
   const navigate = useCallback(
-    (target: Path | number, { replace = false }: NavigateOptions = {}) => {
+    (
+      target: PartialPath | number,
+      { replace = false }: NavigateOptions = {}
+    ) => {
       if (typeof target === 'number') {
         window.history.go(target);
         return;

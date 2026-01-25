@@ -1,4 +1,4 @@
-import type { Resource, ResourceType } from '@/definitions/types';
+import type { Resource } from '@/definitions/types';
 import { isJsonArray, isJsonRecord } from '@/packages/ts-lib';
 import type { JsonValue } from '@/packages/ts-lib/types';
 
@@ -32,17 +32,27 @@ function parseResources(data: JsonValue): Resource[] {
     if (!isJsonRecord(e)) {
       throw new Error('Invalid resources data.');
     }
+    const type = e.type as string;
 
-    return {
+    const common = {
       id: e.id as string,
-      type: e.type as ResourceType,
       name: e.name as string,
-      url: e.url as string,
       description: e.description as string,
       requiresAuth: e.requiresAuth as boolean,
       createdAt: toDate(e.createdAt),
       updatedAt: toDate(e.updatedAt),
     };
+    if (type === 'file') {
+      return { ...common, type, url: e.url as string };
+    } else if (type === 'collection') {
+      return {
+        ...common,
+        type,
+        baseUrl: e.baseUrl as string,
+        entryFile: e.entryFile as string,
+      };
+    }
+    throw new Error(`Unknown resource type: ${type}`);
   });
 }
 

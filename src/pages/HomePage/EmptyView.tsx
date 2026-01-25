@@ -45,18 +45,18 @@ export function EmptyView() {
         </p>
       </div>
       <div className="w-full">
-        <div className="mb-2">Or paste a document URL to read it directly.</div>
+        <div className="mb-3">Or paste a document URL to read it directly.</div>
         <input
           onChange={(e) => setUrl(e.currentTarget.value)}
           placeholder="Paste a URL… Only support .md files now"
           className="h-12 w-full rounded-lg border border-gray-300 px-2 text-sm"
         />
-        <div className="mt-1 text-red-600">{urlError}</div>
+        {urlError && <div className="mt-2 text-red-600">{urlError}</div>}
         <Button
           type="button"
           onClick={() => handleReadUrl()}
           size="small"
-          className="mt-2 mb-3 bg-gray-100 px-12 font-medium text-neutral-900 hover:opacity-80"
+          className="mt-4 mb-6 bg-gray-100 px-12 font-medium text-neutral-900 hover:opacity-80"
         >
           Read
         </Button>
@@ -74,7 +74,7 @@ export function EmptyView() {
 
       <Button
         size="small"
-        className="mt-10 bg-gray-100 px-8 font-medium text-neutral-900 hover:opacity-80"
+        className="mt-10 hidden! bg-gray-100 px-8 font-medium text-neutral-900 hover:opacity-80"
       >
         Add some sample pages
       </Button>
