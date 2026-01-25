@@ -25,3 +25,10 @@ export type NavigateContextValue = (
   target: PartialPath | number,
   options?: NavigateOptions
 ) => void;
+
+export interface ParsedPathHash {
+  readonly resources: readonly string[];
+  readonly params: Readonly<Record<string, string>>;
+  readonly rawResources?: string;
+  readonly rawParams?: string;
+}

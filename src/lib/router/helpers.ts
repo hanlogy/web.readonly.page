@@ -1,4 +1,4 @@
-import type { Path } from './types';
+import type { ParsedPathHash, Path } from './types';
 
 export function pathToUrl({
   pathname = '',
@@ -31,19 +31,13 @@ export function isSamePath(
   return pathToUrl(pathA) === pathToUrl(pathB);
 }
 
-export function parsePathHash(hash: string): {
-  resources: string[];
-  params: Record<string, string>;
-} {
+export function parsePathHash(hash: string): ParsedPathHash {
   hash = hash.replace(/^#/, '');
   if (!hash) {
-    return {
-      resources: [],
-      params: {},
-    };
+    return { resources: [], params: {} };
   }
-  const hashParts = hash.split('#');
 
+  const hashParts = hash.split('#');
   const lastPart = hashParts[hashParts.length - 1];
   const keyValueRegexp = /(?:^|;)(?<key>[^=;]+)=(?<value>[^;]*)/g;
   const matches = [...lastPart.matchAll(keyValueRegexp)];
@@ -55,11 +49,18 @@ export function parsePathHash(hash: string): {
       return [groups.key, groups.value];
     })
     .filter((e) => e !== undefined);
+
+  let rawParams: string | undefined;
   if (params.length) {
-    hashParts.pop();
+    rawParams = hashParts.pop();
   }
+
+  const rawResources = hashParts.length ? hashParts.join('#') : undefined;
+
   return {
     resources: hashParts,
     params: Object.fromEntries(params),
+    ...(rawParams ? { rawParams } : {}),
+    ...(rawResources ? { rawResources } : {}),
   };
 }
