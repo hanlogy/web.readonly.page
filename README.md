@@ -1,73 +1,46 @@
-# React + TypeScript + Vite
+# readonly.page
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[`readonly.page`](http://readonly.page) is a Single Page Application (SPA) that
+fetches content directly from URLs you provide and renders it in your browser.
+The server only serves the app code (HTML/JS/CSS) — it never sees your
+documents.
 
-Currently, two official plugins are available:
+Currently it supports **Markdown**. More formats are planned.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+It supports two target types:
 
-## React Compiler
+1. **Single document**
+2. **Collection** (a directory that contains a `_sidebar.md`)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Why
 
-## Expanding the ESLint configuration
+- **Bring Your Own Data (BYOD):** your content stays where it already lives
+  (GitHub, S3, your server, etc.)
+- **Zero-knowledge by design:** no server-side storage of your content or
+  visited URLs
+- **Portable setup:** configuration lives in your browser and can be
+  exported/imported as a JSON file
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## How it works
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Core philosophy: BYOD + zero-knowledge
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Client-side SPA:** everything runs in the browser
+- **No proxying:** the browser fetches content directly from your URLs
+- **URL privacy:** target URLs are stored in the URL hash (`#...`), so they are
+  not sent to the server in normal requests
+- **No backend database:** all state is stored locally in the browser (e.g.
+  `localStorage`, `IndexedDB`)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### UX flow
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. **Initial load:** a clean “Get Started” screen.
+2. **Add pages:** add target URLs (single files or collections).
+3. **Persistent:** reopen the site later and it restores from local browser
+   storage.
+4. **Portable:** export config to JSON and import it elsewhere.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Tech Stack
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- React 19
+- Tailwind CSS 4
