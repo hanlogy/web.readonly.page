@@ -1,4 +1,5 @@
 import { useProcessedDocument } from '@/lib/markdown';
+import { useParsedPath } from '@/lib/router/hooks';
 import { clsx } from '@/packages/react-dom-lib';
 import { TableOfContents } from './TableOfContents';
 
@@ -9,9 +10,20 @@ export function MarkdownViewer({
   baseUrl: string;
   text: string;
 }) {
+  const {
+    pathname,
+    hash: { resources },
+  } = useParsedPath();
   const { document, tocItems } = useProcessedDocument({
     baseUrl,
     text,
+    linkHrefBuilder: (url) => {
+      return [
+        pathname,
+        ...(resources.length === 1 ? [] : [resources[0]]),
+        url,
+      ].join('#');
+    },
   });
 
   const hasToc = tocItems.length > 0;

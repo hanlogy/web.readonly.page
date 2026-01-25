@@ -17,11 +17,13 @@ export function useProcessedDocument({
   baseUrl,
   tocMinDepth = 2,
   tocMaxDepth = 4,
+  linkHrefBuilder,
 }: {
   text: string;
   baseUrl: string;
   tocMinDepth?: TocDepth;
   tocMaxDepth?: TocDepth;
+  linkHrefBuilder?: (url: string) => string;
 }) {
   const [document, setDocument] = useState<ReactNode>(null);
   const [tocItems, setTocItems] = useState<TocItem[]>([]);
@@ -56,7 +58,7 @@ export function useProcessedDocument({
           .use(collectToc, { minDepth: tocMinDepth, maxDepth: tocMaxDepth })
           // MDAST -> HAST(HTML AST)
           .use(remarkRehype)
-          .use(resolveUrls, { baseUrl })
+          .use(resolveUrls, { baseUrl, linkHrefBuilder })
           // Pretty code
           .use(rehypePrettyCode)
           // HAST -> React elements

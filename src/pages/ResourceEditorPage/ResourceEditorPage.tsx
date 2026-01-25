@@ -142,18 +142,24 @@ export function ResourceEditorPage() {
                     if (!baseUrl?.trim()) {
                       return 'Root URL is required';
                     }
+                    if (/#/.test(baseUrl)) {
+                      return "Root URL must not contain '#'.";
+                    }
                   },
                 })}
               />
             </div>
             <div>
               <TextInput
-                label="Start page"
+                label="Start page path"
                 helper="Relative to Root URL, e.g. README.md or ./README.md"
                 controller={register('entryFile', {
                   validator: ({ entryFile }) => {
                     if (!entryFile?.trim()) {
                       return 'Start page is required';
+                    }
+                    if (/#/.test(entryFile)) {
+                      return "Start page path must not contain '#'.";
                     }
                   },
                 })}
@@ -168,6 +174,9 @@ export function ResourceEditorPage() {
                 validator: ({ url }) => {
                   if (!url?.trim()) {
                     return 'URL is required';
+                  }
+                  if (/#/.test(url)) {
+                    return "URL must not contain '#'.";
                   }
                 },
               })}
