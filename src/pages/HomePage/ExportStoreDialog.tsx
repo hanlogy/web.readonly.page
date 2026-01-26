@@ -13,6 +13,7 @@ export function ExportStoreDialog({
   closeDialog: CloseDialogFn;
 }) {
   const { resources } = useStoreState();
+  const isNotEmpty = resources.length > 0;
 
   const handleExport = () => {
     downloadStore({
@@ -26,14 +27,18 @@ export function ExportStoreDialog({
       title="Export Pages"
       bottomBar={
         <DialogActionBar>
-          <Button onClick={() => handleExport()}>Export</Button>
+          {isNotEmpty && <Button onClick={() => handleExport()}>Export</Button>}
           <Button className="text-gray-500" onClick={() => closeDialog()}>
             Cancel
           </Button>
         </DialogActionBar>
       }
     >
-      The exported file is a JSON file.
+      {isNotEmpty ? (
+        <>The exported file is a JSON file.</>
+      ) : (
+        <>You do not have saved pages yet.</>
+      )}
     </Dialog>
   );
 }
