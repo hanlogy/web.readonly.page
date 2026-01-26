@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getExtensionFromUrl } from '@/helpers/getExtensionFromUrl';
 import { useNavigate } from '@/lib/router';
 import { Button } from '@/packages/react-dom-lib';
 
@@ -13,18 +14,16 @@ export function EmptyView() {
     if (!trimedUrl) {
       return;
     }
-    if (trimedUrl.startsWith('http://')) {
-      setUrlError('Only support https');
+
+    if (!isUrl(trimedUrl)) {
+      setUrlError('Not a valid url');
       return;
     }
 
-    if (!trimedUrl.startsWith('https://')) {
-      setUrlError('URL must start with https://');
-      return;
-    }
-
-    if (!trimedUrl.endsWith('.md')) {
-      setUrlError('Speicify a .md file');
+    if (getExtensionFromUrl(trimedUrl) !== 'md') {
+      setUrlError(
+        'We can read only .md file, will support more file types later'
+      );
       return;
     }
 
@@ -56,7 +55,7 @@ export function EmptyView() {
           type="button"
           onClick={() => handleReadUrl()}
           size="small"
-          className="mt-4 mb-6 bg-gray-100 px-12 font-medium text-neutral-900 hover:opacity-80"
+          className="mt-4 mb-6 bg-gray-600 px-12 font-medium text-white hover:opacity-80"
         >
           Read
         </Button>
@@ -80,4 +79,10 @@ export function EmptyView() {
       </Button>
     </div>
   );
+}
+
+function isUrl(s: string): boolean {
+  const regExp =
+    /^(?:https?:\/\/)?(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}(?::\d{2,5})?(?:\/[^\s#]*)?(?:\?[^\s#]*)?$/i;
+  return regExp.test(s.trim());
 }
