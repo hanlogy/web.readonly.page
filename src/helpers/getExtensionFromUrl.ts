@@ -1,5 +1,9 @@
-export function getExtension(input: string) {
-  const last = input.split('/').pop() ?? '';
+export function getExtensionFromUrl(input: string) {
+  const last =
+    input
+      .replace(/[?&#].*$/, '')
+      .split('/')
+      .pop() ?? '';
   if (!last) {
     return null;
   }
@@ -9,4 +13,3 @@ export function getExtension(input: string) {
   }
   return fileParts.pop()?.toLowerCase() ?? null;
 }
-

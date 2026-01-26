@@ -94,6 +94,7 @@ describe('parsePathHash', () => {
   test('resources has one element', () => {
     expect(parsePathHash('#foo')).toStrictEqual({
       resources: ['foo'],
+      rawResources: 'foo',
       params: {},
     });
   });
@@ -101,6 +102,7 @@ describe('parsePathHash', () => {
   test('only resources, has more then one elements', () => {
     expect(parsePathHash('#foo#bar#baz')).toStrictEqual({
       resources: ['foo', 'bar', 'baz'],
+      rawResources: 'foo#bar#baz',
       params: {},
     });
   });
@@ -109,6 +111,7 @@ describe('parsePathHash', () => {
     expect(parsePathHash('#a=1')).toStrictEqual({
       resources: [],
       params: { a: '1' },
+      rawParams: 'a=1',
     });
   });
 
@@ -116,6 +119,7 @@ describe('parsePathHash', () => {
     expect(parsePathHash('#a=1;b=null;c=true')).toStrictEqual({
       resources: [],
       params: { a: '1', b: 'null', c: 'true' },
+      rawParams: 'a=1;b=null;c=true',
     });
   });
 
@@ -123,6 +127,16 @@ describe('parsePathHash', () => {
     expect(parsePathHash('#foo#bar#baz#a=1;b=null;c=true')).toStrictEqual({
       resources: ['foo', 'bar', 'baz'],
       params: { a: '1', b: 'null', c: 'true' },
+      rawResources: 'foo#bar#baz',
+      rawParams: 'a=1;b=null;c=true',
+    });
+  });
+
+  test('resource has queries', () => {
+    expect(parsePathHash('#foo?id=1#bar#baz?name=foo&type=bar')).toStrictEqual({
+      resources: ['foo?id=1', 'bar', 'baz?name=foo&type=bar'],
+      rawResources: 'foo?id=1#bar#baz?name=foo&type=bar',
+      params: {},
     });
   });
 });

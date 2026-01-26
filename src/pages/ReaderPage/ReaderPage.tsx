@@ -1,8 +1,9 @@
 import type { ResourceType } from '@/definitions/types';
+import { ensureUrlProtocol } from '@/helpers/ensureUrlProtocol';
+import { getExtensionFromUrl } from '@/helpers/getExtensionFromUrl';
 import { useParsedPath } from '@/lib/router/hooks';
 import { resolveUrlWithBase } from '@/packages/react-dom-lib';
 import { PageView } from './ReaderView';
-import { getExtension } from './getExtension';
 
 export function ReaderPage({ type }: { type: ResourceType }) {
   const {
@@ -25,14 +26,14 @@ export function ReaderPage({ type }: { type: ResourceType }) {
 
   if (type === 'collection') {
     baseUrl = hashResources[0];
-    fileExtension = getExtension(hashResources[1]);
+    fileExtension = getExtensionFromUrl(hashResources[1]);
     documentUrl = resolveUrlWithBase({
       base: hashResources[0],
       url: hashResources[1],
     });
   } else {
     baseUrl = hashResources[0].slice(0, hashResources[0].lastIndexOf('/') + 1);
-    fileExtension = getExtension(hashResources[0]);
+    fileExtension = getExtensionFromUrl(hashResources[0]);
     documentUrl = hashResources[0];
   }
 
@@ -43,9 +44,9 @@ export function ReaderPage({ type }: { type: ResourceType }) {
   return (
     <PageView
       type={type}
-      baseUrl={baseUrl}
+      baseUrl={ensureUrlProtocol(baseUrl)}
       filePath={type === 'collection' ? hashResources[1] : undefined}
-      documentUrl={documentUrl}
+      documentUrl={ensureUrlProtocol(documentUrl)}
       fileExtension={fileExtension}
     />
   );

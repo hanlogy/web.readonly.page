@@ -13,8 +13,8 @@ describe('buildUrl', () => {
     );
   });
 
-  test('duplicated slashes', () => {
-    expect(buildUrl({ baseUrl: 'http://example.com//', url: '///foo' })).toBe(
+  test('url has leading slash', () => {
+    expect(buildUrl({ baseUrl: 'http://example.com//', url: '/foo' })).toBe(
       'http://example.com/foo'
     );
   });
@@ -46,9 +46,23 @@ describe('buildUrl', () => {
     expect(result).toBe('https://example.com/bar?key=foo&limit=10');
   });
 
-  test('url is a absolute url', () => {
-    expect(
-      buildUrl({ baseUrl: 'http://example.com', url: 'https://readonly.page' })
-    ).toBe('https://readonly.page');
+  describe('url is a absolute url', () => {
+    test('with scheme', () => {
+      expect(
+        buildUrl({
+          baseUrl: 'http://example.com',
+          url: 'https://readonly.page',
+        })
+      ).toBe('https://readonly.page');
+    });
+
+    test('no scheme', () => {
+      expect(
+        buildUrl({
+          baseUrl: 'http://example.com',
+          url: '//readonly.page',
+        })
+      ).toBe('//readonly.page');
+    });
   });
 });

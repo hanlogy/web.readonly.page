@@ -1,5 +1,11 @@
 import * as production from 'react/jsx-runtime';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  useEffect,
+  useEffectEvent,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeReact from 'rehype-react';
 import remarkGfm from 'remark-gfm';
@@ -32,6 +38,10 @@ export function useProcessedDocument({
 
   const runIdRef = useRef(0);
 
+  const buildHref = useEffectEvent((url: string) => {
+    return linkHrefBuilder ? linkHrefBuilder(url) : url;
+  });
+
   useEffect(() => {
     if (!text) {
       return;
@@ -58,7 +68,7 @@ export function useProcessedDocument({
           .use(collectToc, { minDepth: tocMinDepth, maxDepth: tocMaxDepth })
           // MDAST -> HAST(HTML AST)
           .use(remarkRehype)
-          .use(resolveUrls, { baseUrl, linkHrefBuilder })
+          .use(resolveUrls, { baseUrl, linkHrefBuilder: buildHref })
           // Pretty code
           .use(rehypePrettyCode)
           // HAST -> React elements

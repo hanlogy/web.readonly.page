@@ -39,8 +39,11 @@ export function parsePathHash(hash: string): ParsedPathHash {
 
   const hashParts = hash.split('#');
   const lastPart = hashParts[hashParts.length - 1];
+  const shouldParseParams = lastPart.includes('=') && !lastPart.includes('?');
   const keyValueRegexp = /(?:^|;)(?<key>[^=;]+)=(?<value>[^;]*)/g;
-  const matches = [...lastPart.matchAll(keyValueRegexp)];
+  const matches = shouldParseParams
+    ? [...lastPart.matchAll(keyValueRegexp)]
+    : [];
   const params = matches
     .map(({ groups }) => {
       if (!groups) {
