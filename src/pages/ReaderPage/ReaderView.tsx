@@ -58,6 +58,7 @@ export function PageView({
         }
 
         if (typeof mainBody === 'string') {
+          setError(null);
           setMainContent(mainBody);
         }
       } catch {
