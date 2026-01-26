@@ -131,4 +131,12 @@ describe('parsePathHash', () => {
       rawParams: 'a=1;b=null;c=true',
     });
   });
+
+  test('resource has queries', () => {
+    expect(parsePathHash('#foo?id=1#bar#baz?name=foo&type=bar')).toStrictEqual({
+      resources: ['foo?id=1', 'bar', 'baz?name=foo&type=bar'],
+      rawResources: 'foo?id=1#bar#baz?name=foo&type=bar',
+      params: {},
+    });
+  });
 });
