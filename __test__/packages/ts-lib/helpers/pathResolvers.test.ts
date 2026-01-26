@@ -233,12 +233,21 @@ describe('resolveWithBaseUrl', () => {
     ).toBe('https://abc.com/1/2/3.log');
   });
 
-  test('scheme relative', () => {
+  test('ref is scheme relative', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com/a/b/',
         ref: '//x.com/y',
       })
     ).toBe('//x.com/y');
+  });
+
+  test('base is scheme relative', () => {
+    expect(
+      resolveWithBaseUrl({
+        base: '//abc.com/a/b/',
+        ref: '../y',
+      })
+    ).toBe('//abc.com/a/y');
   });
 });

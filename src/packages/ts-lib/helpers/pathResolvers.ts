@@ -42,12 +42,14 @@ export function resolveWithBaseUrl({
     return ref;
   }
 
-  // Only handle absolute http(s) baseUrl, otherwise do nothing
-  const baseUrlMatched = /^(https?:\/\/[^/?#]+)(\/[^?#]*)?/i.exec(baseUrl);
+  // Only handle absolute http(s) or scheme-relative baseUrl, otherwise do
+  // nothing
+  const baseUrlMatched = /^((?:https?:)?\/\/[^/?#]+)(\/[^?#]*)?/i.exec(baseUrl);
   if (!baseUrlMatched) {
     return ref;
   }
 
+  // "https://abc.com" or "//abc.com"
   const origin = baseUrlMatched[1];
   const basePath = baseUrlMatched[2] ?? '/';
 

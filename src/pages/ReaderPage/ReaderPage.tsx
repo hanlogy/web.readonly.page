@@ -1,4 +1,5 @@
 import type { ResourceType } from '@/definitions/types';
+import { ensureUrlProtocol } from '@/helpers/ensureUrlProtocol';
 import { useParsedPath } from '@/lib/router/hooks';
 import { resolveUrlWithBase } from '@/packages/react-dom-lib';
 import { PageView } from './ReaderView';
@@ -43,9 +44,9 @@ export function ReaderPage({ type }: { type: ResourceType }) {
   return (
     <PageView
       type={type}
-      baseUrl={baseUrl}
+      baseUrl={ensureUrlProtocol(baseUrl)}
       filePath={type === 'collection' ? hashResources[1] : undefined}
-      documentUrl={documentUrl}
+      documentUrl={ensureUrlProtocol(documentUrl)}
       fileExtension={fileExtension}
     />
   );

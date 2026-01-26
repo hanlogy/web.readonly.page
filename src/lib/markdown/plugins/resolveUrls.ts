@@ -1,5 +1,6 @@
 import type { Root, Element } from 'hast';
 import { visit } from 'unist-util-visit';
+import { resolveWithBaseUrl } from '@/packages/ts-lib';
 
 export function resolveUrls({
   baseUrl,
@@ -8,8 +9,6 @@ export function resolveUrls({
   baseUrl: string;
   linkHrefBuilder?: (url: string) => string;
 }) {
-  const base = new URL(baseUrl);
-
   return (tree: Root) => {
     visit(tree, 'element', ({ tagName, properties }: Element) => {
       if (tagName !== 'img' && tagName !== 'a') {
@@ -18,11 +17,9 @@ export function resolveUrls({
 
       if (tagName === 'img') {
         const src = String(properties.src);
-
-        if (!isAbsoluteOrSpecial(src)) {
-          properties.src = resolveUrl(src, base);
+        if (!isExternalRef(src)) {
+          properties.src = resolveWithBaseUrl({ base: baseUrl, ref: src });
         }
-
         properties.loading = 'lazy';
         properties.decoding = 'async';
         properties.referrerPolicy = 'no-referrer';
@@ -32,30 +29,20 @@ export function resolveUrls({
 
       const href = String(properties.href);
 
-      if (isExternalHttpUrl(href)) {
+      if (isExternalRef(href)) {
         properties.target = '_blank';
         properties.rel = 'noopener';
 
         return;
       }
 
-      if (!isAbsoluteOrSpecial(href)) {
-        properties.href = linkHrefBuilder
-          ? linkHrefBuilder(href)
-          : resolveUrl(href, base);
-      }
+      properties.href = linkHrefBuilder
+        ? linkHrefBuilder(href)
+        : resolveWithBaseUrl({ ref: href, base: baseUrl });
     });
   };
 }
 
-function isAbsoluteOrSpecial(url: string) {
-  return /^(https?:|data:|mailto:|tel:|#)/i.test(url) || url.startsWith('//');
-}
-
-function isExternalHttpUrl(href: string) {
+function isExternalRef(href: string) {
   return /^https?:/i.test(href) || href.startsWith('//');
-}
-
-function resolveUrl(url: string, base: URL) {
-  return isAbsoluteOrSpecial(url) ? url : new URL(url, base).toString();
 }
