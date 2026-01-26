@@ -2,7 +2,15 @@ import type { HttpQuery } from '../types';
 import { buildQueryString } from './buildQueryString';
 
 function isAbsoluteUrl(url: string): boolean {
-  return !!url && (url.startsWith('http://') || url.startsWith('https://'));
+  return (
+    !!url &&
+    (url.startsWith('http://') ||
+      url.startsWith('https://') ||
+      // Caution:
+      // This only works in browsers. In Node.js, a URL without a scheme is not
+      // valid. Validate the url before calling this help.
+      url.startsWith('//'))
+  );
 }
 
 export function buildUrl({
