@@ -14,16 +14,15 @@ It supports two target types:
 
 ## Why
 
-- **Bring Your Own Data (BYOD):** your content stays where it already lives
-  (GitHub, S3, your server, etc.)
-- **Zero-knowledge by design:** no server-side storage of your content or
-  visited URLs
-- **Portable setup:** configuration lives in your browser and can be
-  exported/imported as a JSON file
+- **Bring Your Own Data:** your content stays where it already lives (GitHub,
+  S3, your server, etc.)
+- **privacy:** no server-side storage of your content or visited URLs
+- **Portable:** configuration lives in your browser and can be exported/imported
+  as a JSON file
 
 ## How it works
 
-### Core philosophy: BYOD + zero-knowledge
+### Core philosophy: BYOD + privacy-first
 
 - **Client-side SPA:** everything runs in the browser
 - **No proxying:** the browser fetches content directly from your URLs
