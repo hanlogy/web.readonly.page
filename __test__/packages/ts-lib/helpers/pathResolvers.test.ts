@@ -4,27 +4,27 @@ import {
 } from '@/packages/ts-lib/helpers/pathResolvers';
 
 describe('resolveWithBasePath', () => {
-  test('path specific', () => {
+  test('ref specific', () => {
     expect(
       resolveWithBasePath({
         base: '/p/a/t/h',
-        path: '//abc',
+        ref: '//abc',
       })
     ).toBe('//abc');
 
     expect(
       resolveWithBasePath({
         base: '/p/a/t/h',
-        path: 'https://abc',
+        ref: 'https://abc',
       })
     ).toBe('https://abc');
   });
 
-  test('simple path', () => {
+  test('simple ref', () => {
     expect(
       resolveWithBasePath({
         base: '/var/log',
-        path: 'app.log',
+        ref: 'app.log',
       })
     ).toBe('/var/log/app.log');
   });
@@ -33,7 +33,7 @@ describe('resolveWithBasePath', () => {
     expect(
       resolveWithBasePath({
         base: '/var/log',
-        path: './app.log',
+        ref: './app.log',
       })
     ).toBe('/var/log/app.log');
   });
@@ -42,7 +42,7 @@ describe('resolveWithBasePath', () => {
     expect(
       resolveWithBasePath({
         base: '/var/log/users',
-        path: '../website.txt',
+        ref: '../website.txt',
       })
     ).toBe('/var/log/website.txt');
   });
@@ -51,7 +51,7 @@ describe('resolveWithBasePath', () => {
     expect(
       resolveWithBasePath({
         base: '/var/log/users',
-        path: '../../website.txt',
+        ref: '../../website.txt',
       })
     ).toBe('/var/website.txt');
   });
@@ -60,7 +60,7 @@ describe('resolveWithBasePath', () => {
     expect(
       resolveWithBasePath({
         base: '/',
-        path: '../website.txt',
+        ref: '../website.txt',
       })
     ).toBe('/website.txt');
   });
@@ -69,7 +69,7 @@ describe('resolveWithBasePath', () => {
     expect(
       resolveWithBasePath({
         base: '/1/2/3',
-        path: '../../../../a/b/c',
+        ref: '../../../../a/b/c',
       })
     ).toBe('/a/b/c');
   });
@@ -78,17 +78,17 @@ describe('resolveWithBasePath', () => {
     expect(
       resolveWithBasePath({
         base: '/var//log///',
-        path: 'app.log',
+        ref: 'app.log',
       })
     ).toBe('/var/log/app.log');
   });
 
-  describe('empty path', () => {
+  describe('empty ref', () => {
     test('base has leading /, no trailing', () => {
       expect(
         resolveWithBasePath({
           base: '/var/log',
-          path: '',
+          ref: '',
         })
       ).toBe('/var/log');
     });
@@ -97,7 +97,7 @@ describe('resolveWithBasePath', () => {
       expect(
         resolveWithBasePath({
           base: 'var/log/',
-          path: '',
+          ref: '',
         })
       ).toBe('var/log/');
     });
@@ -106,36 +106,36 @@ describe('resolveWithBasePath', () => {
       expect(
         resolveWithBasePath({
           base: 'var/log',
-          path: '',
+          ref: '',
         })
       ).toBe('var/log');
     });
   });
 
   describe('do not care', () => {
-    test('strange base path', () => {
+    test('strange base ref', () => {
       expect(
         resolveWithBasePath({
           base: '///var/log/',
-          path: './users/app.log',
+          ref: './users/app.log',
         })
       ).toBe('///var/log/users/app.log');
     });
 
-    test('strange absolute path', () => {
+    test('strange absolute ref', () => {
       expect(
         resolveWithBasePath({
           base: '/var/log/',
-          path: '///users/app.log',
+          ref: '///users/app.log',
         })
       ).toBe('///users/app.log');
     });
 
-    test('invalid relative path', () => {
+    test('invalid relative ref', () => {
       expect(
         resolveWithBasePath({
           base: '/var/log/',
-          path: '.../.../users/app.log',
+          ref: '.../.../users/app.log',
         })
       ).toBe('/var/log/.../.../users/app.log');
     });
@@ -143,20 +143,20 @@ describe('resolveWithBasePath', () => {
 });
 
 describe('resolveWithBaseUrl', () => {
-  test('relative path', () => {
+  test('relative ref', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com/a/b/c',
-        href: 'd',
+        ref: 'd',
       })
     ).toBe('https://abc.com/a/b/c/d');
   });
 
-  test('relative path, base has ending slash', () => {
+  test('relative ref, base has ending slash', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com/a/b/c/',
-        href: 'd',
+        ref: 'd',
       })
     ).toBe('https://abc.com/a/b/c/d');
   });
@@ -165,7 +165,7 @@ describe('resolveWithBaseUrl', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com/a/b/c/',
-        href: './d',
+        ref: './d',
       })
     ).toBe('https://abc.com/a/b/c/d');
   });
@@ -174,7 +174,7 @@ describe('resolveWithBaseUrl', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com/a/b/c/',
-        href: '../d',
+        ref: '../d',
       })
     ).toBe('https://abc.com/a/b/d');
   });
@@ -183,7 +183,7 @@ describe('resolveWithBaseUrl', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com/a/b/c/',
-        href: '../../d',
+        ref: '../../d',
       })
     ).toBe('https://abc.com/a/d');
   });
@@ -192,7 +192,7 @@ describe('resolveWithBaseUrl', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com',
-        href: 'd',
+        ref: 'd',
       })
     ).toBe('https://abc.com/d');
   });
@@ -201,7 +201,7 @@ describe('resolveWithBaseUrl', () => {
     expect(
       resolveWithBaseUrl({
         base: 'file:///a/b',
-        href: 'd',
+        ref: 'd',
       })
     ).toBe('d');
   });
@@ -210,7 +210,7 @@ describe('resolveWithBaseUrl', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com/a/b/',
-        href: 'https://x.com/y',
+        ref: 'https://x.com/y',
       })
     ).toBe('https://x.com/y');
   });
@@ -219,7 +219,7 @@ describe('resolveWithBaseUrl', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com/a/b/',
-        href: '/x',
+        ref: '/x',
       })
     ).toBe('https://abc.com/x');
   });
@@ -228,7 +228,7 @@ describe('resolveWithBaseUrl', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com/a/b/',
-        href: '../../../../1/2/3.log',
+        ref: '../../../../1/2/3.log',
       })
     ).toBe('https://abc.com/1/2/3.log');
   });
@@ -237,7 +237,7 @@ describe('resolveWithBaseUrl', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com/a/b/',
-        href: '//x.com/y',
+        ref: '//x.com/y',
       })
     ).toBe('//x.com/y');
   });

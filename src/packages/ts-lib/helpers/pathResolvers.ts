@@ -3,20 +3,20 @@
  */
 export function resolveWithBasePath({
   base,
-  path,
+  ref,
 }: {
   base: string;
-  path: string;
+  ref: string;
 }) {
   if (
-    path.startsWith('/') ||
-    path.startsWith('//') ||
-    /^https?:\/\//i.test(path)
+    ref.startsWith('/') ||
+    ref.startsWith('//') ||
+    /^https?:\/\//i.test(ref)
   ) {
-    return path;
+    return ref;
   }
 
-  const resolved = resolveRelativePath({ base, path });
+  const resolved = resolveRelativePath({ base, ref });
   if (!resolved || resolved.startsWith('/')) {
     return resolved;
   }
@@ -29,33 +29,33 @@ export function resolveWithBasePath({
 }
 
 /**
- * Resolve href against an absolute https? `base`
+ * Resolve ref against an absolute https? `base`
  */
 export function resolveWithBaseUrl({
   base: baseUrl,
-  href,
+  ref,
 }: {
   base: string;
-  href: string;
+  ref: string;
 }) {
-  if (href.startsWith('//') || /^https?:\/\//i.test(href)) {
-    return href;
+  if (ref.startsWith('//') || /^https?:\/\//i.test(ref)) {
+    return ref;
   }
 
   // Only handle absolute http(s) baseUrl, otherwise do nothing
   const baseUrlMatched = /^(https?:\/\/[^/?#]+)(\/[^?#]*)?/i.exec(baseUrl);
   if (!baseUrlMatched) {
-    return href;
+    return ref;
   }
 
   const origin = baseUrlMatched[1];
   const basePath = baseUrlMatched[2] ?? '/';
 
-  if (href.startsWith('/')) {
-    return `${origin}${href}`;
+  if (ref.startsWith('/')) {
+    return `${origin}${ref}`;
   }
 
-  const resolvedPath = resolveRelativePath({ base: basePath, path: href });
+  const resolvedPath = resolveRelativePath({ base: basePath, ref: ref });
 
   if (resolvedPath.startsWith('/')) {
     return `${origin}${resolvedPath}`;
@@ -64,7 +64,7 @@ export function resolveWithBaseUrl({
   return `${origin}/${resolvedPath}`;
 }
 
-function resolveRelativePath({ base, path }: { base: string; path: string }) {
+function resolveRelativePath({ base, ref }: { base: string; ref: string }) {
   const baseHasTrailingSlash = base.endsWith('/');
 
   const baseParts = base
@@ -72,7 +72,7 @@ function resolveRelativePath({ base, path }: { base: string; path: string }) {
     .replace(/\/+/g, '/')
     .split('/');
 
-  const pathParts = path.replace(/\/+/g, '/').replace(/^\.\//, '').split('/');
+  const pathParts = ref.replace(/\/+/g, '/').replace(/^\.\//, '').split('/');
 
   let depth = 0;
 
