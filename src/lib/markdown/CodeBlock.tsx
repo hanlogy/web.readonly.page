@@ -45,7 +45,8 @@ export function CodeBlock({
         const { props } = codeNode;
 
         return cloneElement(codeNode, {
-          className: clsx(props.className, 'relative'),
+          // `grid` works when code is  short and does not have a langauge name.
+          className: clsx(props.className, 'relative grid'),
           children: (
             <>
               <span ref={contentRef}>{props.children}</span>
