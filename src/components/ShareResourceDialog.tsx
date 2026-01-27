@@ -25,7 +25,7 @@ export function ShareResourceDialog({
   } else {
     hash = [resource.url];
   }
-  const url = `https://readonly.page/${resource.type}#` + hash.join('#');
+  const url = `${window.location.origin}/${resource.type}#` + hash.join('#');
 
   return (
     <Dialog
