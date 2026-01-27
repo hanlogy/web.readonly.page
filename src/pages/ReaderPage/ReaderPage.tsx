@@ -2,7 +2,7 @@ import type { ResourceType } from '@/definitions/types';
 import { ensureUrlProtocol } from '@/helpers/ensureUrlProtocol';
 import { getExtensionFromUrl } from '@/helpers/getExtensionFromUrl';
 import { useParsedPath } from '@/lib/router/hooks';
-import { resolveUrlWithBase } from '@/packages/react-dom-lib';
+import { resolveWithBaseUrl } from '@/packages/ts-lib';
 import { PageView } from './ReaderView';
 
 export function ReaderPage({ type }: { type: ResourceType }) {
@@ -27,9 +27,9 @@ export function ReaderPage({ type }: { type: ResourceType }) {
   if (type === 'collection') {
     baseUrl = hashResources[0];
     fileExtension = getExtensionFromUrl(hashResources[1]);
-    documentUrl = resolveUrlWithBase({
+    documentUrl = resolveWithBaseUrl({
       base: hashResources[0],
-      url: hashResources[1],
+      ref: hashResources[1],
     });
   } else {
     baseUrl = hashResources[0].slice(0, hashResources[0].lastIndexOf('/') + 1);

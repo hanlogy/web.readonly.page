@@ -1,0 +1,7 @@
+services:
+  webapp:
+    image: readonly-page:latest
+    container_name: readonly-page
+    build: .
+    ports:
+      - "9081:80"

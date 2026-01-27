@@ -43,3 +43,52 @@ It supports two target types:
 
 - React 19
 - Tailwind CSS 4
+
+## Self-hosting
+
+`readonly.page` is a static Single Page Application (SPA). You can host it
+anywhere that can serve static files. There is no backend and no database.
+
+### Run locally (development)
+
+```bash
+git clone git@github.com:hanlogy/web.readonly.page.git
+cd web.readonly.page
+npm install
+npm run dev
+```
+
+### Build for production
+
+```bash
+npm run build
+```
+
+Deploy the generated static files in `dist/` to your web server.
+
+### Self-host with Docker / Docker Compose
+
+This repo includes `Dockerfile`, `docker-compose.yml`, and Nginx config.
+
+**Start:**
+
+```bash
+docker compose up -d
+
+# Rebuild and start:
+# docker compose up -d --build
+```
+
+Open: `http://localhost:8080`
+
+**Stop:**
+
+```bash
+docker compose down
+```
+
+## A simple server to self-host your documents
+
+If you want to self-host your docs and files, here is a simple Docker-based file
+server: \
+https://github.com/hanlogy/file-server.readonly.page
