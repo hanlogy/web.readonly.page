@@ -64,8 +64,7 @@ export function EmptyView() {
         </p>
         <a
           className="text-sm font-medium text-neutral-900 underline underline-offset-4 hover:opacity-80"
-          target="_blank"
-          href="http://about.readonly.page/en-US/privacy"
+          href="https://readonly.page/collection#https://about.readonly.page/docs/en-US#./privacy-policy.md"
         >
           How privacy works
         </a>
