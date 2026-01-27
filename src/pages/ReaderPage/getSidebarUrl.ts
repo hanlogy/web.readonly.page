@@ -1,4 +1,3 @@
 export function getSidebarUrl(baseUrl: string): string {
-  baseUrl.replace(/\/*$/, '');
-  return [baseUrl, '_sidebar.md'].join('/');
+  return [baseUrl.replace(/\/*$/, ''), '_sidebar.md'].join('/');
 }
