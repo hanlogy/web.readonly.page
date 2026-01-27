@@ -37,7 +37,7 @@ export function parsePathHash(hash: string): ParsedPathHash {
     return { resources: [], params: {} };
   }
 
-  const hashParts = hash.split('#');
+  const hashParts = decodeURIComponent(hash).split('#');
   const lastPart = hashParts[hashParts.length - 1];
   const shouldParseParams = lastPart.includes('=') && !lastPart.includes('?');
   const keyValueRegexp = /(?:^|;)(?<key>[^=;]+)=(?<value>[^;]*)/g;
