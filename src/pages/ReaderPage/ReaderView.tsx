@@ -48,6 +48,10 @@ export function PageView({
   );
 
   useEffect(() => {
+    setSidebarShown(false);
+  }, [baseUrl, documentUrl]);
+
+  useEffect(() => {
     (async () => {
       const http = createHttpClient();
 
@@ -80,7 +84,7 @@ export function PageView({
 
   if (error) {
     mainView = (
-      <div className="mt-10 text-center">
+      <div className="pt-10 text-center">
         <div className="text-red-600">{error}</div>
         <div className="mt-10 mb-5">The reasons could be:</div>
         <ul className="mx-auto w-fit list-outside list-disc space-y-2 text-left text-gray-600">

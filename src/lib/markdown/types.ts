@@ -8,6 +8,6 @@ export interface TocItem {
 
 export interface SidebarItem {
   text: string;
-  link: string;
+  link?: string;
   children: SidebarItem[];
 }

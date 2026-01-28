@@ -43,15 +43,19 @@ function SidebarButton({
     <div
       className={clsx('flex h-9 w-full items-center text-left text-gray-600')}
     >
-      <Link
-        to={{
-          pathname,
-          hash: buildPathHash({ base: baseUrl, file: item.link }),
-        }}
-        className="flex-1 pl-2 text-gray-500 hover:text-gray-700"
-      >
-        {item.text}
-      </Link>
+      {item.link ? (
+        <Link
+          to={{
+            pathname,
+            hash: buildPathHash({ base: baseUrl, file: item.link }),
+          }}
+          className="flex-1 pl-2 text-gray-500 hover:text-gray-700"
+        >
+          {item.text}
+        </Link>
+      ) : (
+        <div className="flex-1 pl-2 text-gray-500">{item.text}</div>
+      )}
       {item.children.length > 0 && (
         <IconButton onClick={() => toggleIsCollapsed()}>
           {isCollapsed ? (
