@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { PathContext, NavigateContext } from './contexts';
-import { parsePathHash } from './helpers';
+import { buildPathHash, parsePathHash } from './helpers';
 import type { PartialPath } from './types';
 
 export function usePath() {
@@ -11,13 +11,6 @@ export function usePath() {
   }
 
   return value;
-}
-
-// TODO: Parse search into Record when needed.
-export function useParsedPath() {
-  const { hash, ...rest } = usePath();
-
-  return { ...rest, hash: parsePathHash(hash) };
 }
 
 export function useNavigate() {
@@ -43,13 +36,11 @@ export function useNavigateBack() {
 }
 
 export function useAnchor() {
-  const {
-    hash: { rawResources, params },
-    ...rest
-  } = useParsedPath();
-  const key = 'anchor';
+  const { hash, ...rest } = usePath();
   const navigate = useNavigate();
-  const anchorId = params[key];
+  const key = 'anchor';
+  const hashParams = parsePathHash(hash);
+  const anchorId = hashParams[key];
 
   const jumpTo = (id: string) => {
     const headlineNode = document.getElementById(id);
@@ -79,16 +70,9 @@ export function useAnchor() {
   return {
     anchorId,
     setAnchor: (id: string) => {
-      const hashParts = [
-        rawResources,
-        Object.entries({ ...params, [key]: id })
-          .map(([k, v]) => `${k}=${v}`)
-          .join(';'),
-      ].filter(Boolean);
-
       navigate({
         ...rest,
-        hash: hashParts.length ? ['', ...hashParts].join('#') : '',
+        hash: buildPathHash({ ...hashParams, [key]: id }),
       });
     },
   };

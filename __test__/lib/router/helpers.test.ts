@@ -1,4 +1,5 @@
 import {
+  buildPathHash,
   isSamePath,
   parsePathHash,
   pathToUrl,
@@ -152,5 +153,46 @@ describe('parsePathHash', () => {
       a: 'hello~1world',
       b: '2',
     });
+  });
+});
+
+describe('buildPathHash', () => {
+  test('empty params', () => {
+    expect(buildPathHash({})).toStrictEqual('');
+  });
+
+  test('all undefined', () => {
+    expect(buildPathHash({ a: undefined, b: undefined })).toStrictEqual('');
+  });
+
+  test('undefined filtered', () => {
+    expect(buildPathHash({ a: undefined, b: null, c: 0 })).toStrictEqual(
+      '#b=null~c=0'
+    );
+  });
+
+  test('primary values', () => {
+    expect(
+      buildPathHash({
+        a: null,
+        b: '',
+        c: '1',
+        d: 1,
+        e: true,
+        f: false,
+      })
+    ).toStrictEqual('#a=null~b=~c=1~d=1~e=true~f=false');
+  });
+
+  test('filter invalid key', () => {
+    expect(buildPathHash({ a: '1', a1: '2', a_b: '3', '': '4' })).toStrictEqual(
+      '#a=1'
+    );
+  });
+
+  test('keep special characters', () => {
+    expect(
+      buildPathHash({ a: 'hello world', b: 'x=y', c: 'a~b' })
+    ).toStrictEqual('#a=hello world~b=x=y~c=a~b');
   });
 });

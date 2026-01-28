@@ -57,3 +57,15 @@ export function parsePathHash(hash: string): Record<string, string> {
 
   return params;
 }
+
+export function buildPathHash(
+  params: Record<string, string | number | boolean | undefined | null>
+): string {
+  const result = Object.entries(params)
+    .filter(([, value]) => value !== undefined)
+    .filter(([key]) => /^[a-zA-Z]+$/.test(key))
+    .map(([key, value]) => `${key}=${value}`)
+    .join('~');
+
+  return result.length ? `#${result}` : '';
+}

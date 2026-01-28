@@ -1,32 +1,16 @@
-import { useCallback } from 'react';
 import { useProcessedDocument } from '@/lib/markdown';
-import { useParsedPath } from '@/lib/router/hooks';
 import { clsx } from '@/packages/react-dom-lib';
 import { TableOfContents } from './TableOfContents';
 
 export function MarkdownViewer({
   baseUrl,
   text,
+  linkHrefBuilder,
 }: {
   baseUrl: string;
   text: string;
+  linkHrefBuilder?: (url: string) => string;
 }) {
-  const {
-    pathname,
-    hash: { resources },
-  } = useParsedPath();
-
-  const linkHrefBuilder = useCallback(
-    (url: string) => {
-      return [
-        pathname,
-        ...(resources.length === 1 ? [] : [resources[0]]),
-        url,
-      ].join('#');
-    },
-    [resources, pathname]
-  );
-
   const { document, tocItems } = useProcessedDocument({
     baseUrl,
     text,

@@ -7,8 +7,9 @@ export function ResourceItem({ resource }: { resource: Resource }) {
   const { name, type, description } = resource;
   const url =
     type === 'file'
-      ? resource.url
-      : [resource.baseUrl, resource.entryFile].join('#');
+      ? `url=${resource.url}`
+      : `base=${resource.baseUrl}~file=${resource.entryFile}`;
+
   return (
     <div className="relative flex rounded-xl border border-gray-100 bg-gray-100 p-4 hover:border-gray-300">
       <div className="absolute top-3 right-3">
