@@ -1,4 +1,4 @@
-import type { ParsedPathHash, Path } from './types';
+import type { Path } from './types';
 
 export function pathToUrl({
   pathname = '',
@@ -31,39 +31,41 @@ export function isSamePath(
   return pathToUrl(pathA) === pathToUrl(pathB);
 }
 
-export function parsePathHash(hash: string): ParsedPathHash {
+export function parsePathHash(hash: string): Record<string, string> {
   hash = hash.replace(/^#/, '');
-  if (!hash) {
-    return { resources: [], params: {} };
+  if (!hash || hash.startsWith('~')) {
+    return {};
   }
 
-  const hashParts = decodeURIComponent(hash).split('#');
-  const lastPart = hashParts[hashParts.length - 1];
-  const shouldParseParams = lastPart.includes('=') && !lastPart.includes('?');
-  const keyValueRegexp = /(?:^|;)(?<key>[^=;]+)=(?<value>[^;]*)/g;
-  const matches = shouldParseParams
-    ? [...lastPart.matchAll(keyValueRegexp)]
-    : [];
-  const params = matches
-    .map(({ groups }) => {
-      if (!groups) {
-        return undefined;
-      }
-      return [groups.key, groups.value];
-    })
-    .filter((e) => e !== undefined);
-
-  let rawParams: string | undefined;
-  if (params.length) {
-    rawParams = hashParts.pop();
+  try {
+    hash = decodeURIComponent(hash);
+  } catch {
+    // Do nothing
   }
 
-  const rawResources = hashParts.length ? hashParts.join('#') : undefined;
+  const matched = hash.matchAll(
+    /(?:^|~)([a-zA-Z]+)=([\s\S]*?)(?=~[a-zA-Z]+=|$)/g
+  );
 
-  return {
-    resources: hashParts,
-    params: Object.fromEntries(params),
-    ...(rawParams ? { rawParams } : {}),
-    ...(rawResources ? { rawResources } : {}),
-  };
+  const params: Record<string, string> = {};
+  for (const match of matched) {
+    if (!match[2]) {
+      continue;
+    }
+    params[match[1]] = match[2];
+  }
+
+  return params;
+}
+
+export function buildPathHash(
+  params: Record<string, string | number | boolean | undefined | null>
+): string {
+  const result = Object.entries(params)
+    .filter(([, value]) => value !== undefined)
+    .filter(([key]) => /^[a-zA-Z]+$/.test(key))
+    .map(([key, value]) => `${key}=${value}`)
+    .join('~');
+
+  return result.length ? `#${result}` : '';
 }

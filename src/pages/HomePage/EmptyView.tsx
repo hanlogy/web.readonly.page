@@ -29,7 +29,7 @@ export function EmptyView() {
 
     navigate({
       pathname: 'file',
-      hash: `#${trimedUrl}`,
+      hash: `#url=${trimedUrl}`,
     });
   };
 

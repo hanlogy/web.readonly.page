@@ -1,8 +1,9 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { HouseIcon, MenuIcon, Share2Icon, XIcon } from 'lucide-react';
 import { ShareResourceDialog } from '@/components/ShareResourceDialog';
 import type { ResourceType } from '@/definitions/types';
 import { useNavigate } from '@/lib/router';
+import { buildPathHash } from '@/lib/router/helpers';
 import {
   Button,
   clsx,
@@ -36,15 +37,27 @@ export function PageView({
   const { openDialog } = useDialog();
   const [error, setError] = useState<string | null>(null);
 
+  const linkHrefBuilder = useCallback(
+    (ref: string) => {
+      return [
+        type,
+        type === 'file' ? ref : buildPathHash({ base: baseUrl, file: ref }),
+      ].join('');
+    },
+    [baseUrl, type]
+  );
+
+  useEffect(() => {
+    setSidebarShown(false);
+  }, [baseUrl, documentUrl]);
+
   useEffect(() => {
     (async () => {
       const http = createHttpClient();
 
       if (type === 'collection') {
         const sidebarUrl = getSidebarUrl(baseUrl);
-        const { body: sidebarBody } = await http.get({
-          url: sidebarUrl,
-        });
+        const { body: sidebarBody } = await http.get({ url: sidebarUrl });
 
         if (typeof sidebarBody === 'string') {
           setSidebarContent(sidebarBody);
@@ -71,7 +84,7 @@ export function PageView({
 
   if (error) {
     mainView = (
-      <div className="mt-10 text-center">
+      <div className="pt-10 text-center">
         <div className="text-red-600">{error}</div>
         <div className="mt-10 mb-5">The reasons could be:</div>
         <ul className="mx-auto w-fit list-outside list-disc space-y-2 text-left text-gray-600">
@@ -85,7 +98,13 @@ export function PageView({
   } else if (!mainContent) {
     mainView = <></>;
   } else if (fileExtension === 'md') {
-    mainView = <MarkdownViewer baseUrl={baseUrl} text={mainContent} />;
+    mainView = (
+      <MarkdownViewer
+        linkHrefBuilder={linkHrefBuilder}
+        baseUrl={baseUrl}
+        text={mainContent}
+      />
+    );
   }
 
   return (

@@ -1,4 +1,5 @@
 import {
+  buildPathHash,
   isSamePath,
   parsePathHash,
   pathToUrl,
@@ -84,59 +85,114 @@ describe('readPathFromLocation', () => {
 });
 
 describe('parsePathHash', () => {
-  test('only #', () => {
-    expect(parsePathHash('#')).toStrictEqual({
-      resources: [],
-      params: {},
+  test('empty', () => {
+    expect(parsePathHash('')).toStrictEqual({});
+    expect(parsePathHash('#')).toStrictEqual({});
+  });
+
+  test('strip hash', () => {
+    expect(parsePathHash('#a=1')).toStrictEqual({ a: '1' });
+    expect(parsePathHash('a=1')).toStrictEqual({ a: '1' });
+  });
+
+  test('no valid param', () => {
+    expect(parsePathHash('#foo')).toStrictEqual({});
+    expect(parsePathHash('#~abc')).toStrictEqual({});
+  });
+
+  test('single param', () => {
+    expect(parsePathHash('#foo=bar')).toStrictEqual({ foo: 'bar' });
+  });
+
+  test('multiple params', () => {
+    expect(parsePathHash('#a=1~b=2~c=3')).toStrictEqual({
+      a: '1',
+      b: '2',
+      c: '3',
     });
   });
 
-  test('resources has one element', () => {
-    expect(parsePathHash('#foo')).toStrictEqual({
-      resources: ['foo'],
-      rawResources: 'foo',
-      params: {},
+  test('leading separator', () => {
+    expect(parsePathHash('#~a=1~b=2')).toStrictEqual({});
+  });
+
+  test('remove empty value', () => {
+    expect(parsePathHash('#a=')).toStrictEqual({});
+    expect(parsePathHash('#a=~b=2')).toStrictEqual({ b: '2' });
+  });
+
+  test('decode', () => {
+    expect(parsePathHash('#a=hello%20world')).toStrictEqual({
+      a: 'hello world',
+    });
+    // %7E -> "~"
+    expect(parsePathHash('#a=1%7Eb=2')).toStrictEqual({ a: '1', b: '2' });
+  });
+
+  test('decode failed', () => {
+    expect(parsePathHash('#a=%E0%A4%A')).toStrictEqual({ a: '%E0%A4%A' });
+  });
+
+  test('has queries like pattern in values', () => {
+    expect(
+      parsePathHash('#base=foo&id=1~file=bar~extra=baz?name=foo&type=bar')
+    ).toStrictEqual({
+      base: 'foo&id=1',
+      file: 'bar',
+      extra: 'baz?name=foo&type=bar',
     });
   });
 
-  test('only resources, has more then one elements', () => {
-    expect(parsePathHash('#foo#bar#baz')).toStrictEqual({
-      resources: ['foo', 'bar', 'baz'],
-      rawResources: 'foo#bar#baz',
-      params: {},
-    });
+  test('duplicate key', () => {
+    expect(parsePathHash('#a=1~a=2')).toEqual({ a: '2' });
   });
 
-  test('only params, has one pair ', () => {
-    expect(parsePathHash('#a=1')).toStrictEqual({
-      resources: [],
-      params: { a: '1' },
-      rawParams: 'a=1',
+  test('tilde in value', () => {
+    expect(parsePathHash('#a=hello~world')).toEqual({ a: 'hello~world' });
+    expect(parsePathHash('#a=hello~1world~b=2')).toEqual({
+      a: 'hello~1world',
+      b: '2',
     });
   });
+});
 
-  test('only params, more than one pairs ', () => {
-    expect(parsePathHash('#a=1;b=null;c=true')).toStrictEqual({
-      resources: [],
-      params: { a: '1', b: 'null', c: 'true' },
-      rawParams: 'a=1;b=null;c=true',
-    });
+describe('buildPathHash', () => {
+  test('empty params', () => {
+    expect(buildPathHash({})).toStrictEqual('');
   });
 
-  test('both resources and params', () => {
-    expect(parsePathHash('#foo#bar#baz#a=1;b=null;c=true')).toStrictEqual({
-      resources: ['foo', 'bar', 'baz'],
-      params: { a: '1', b: 'null', c: 'true' },
-      rawResources: 'foo#bar#baz',
-      rawParams: 'a=1;b=null;c=true',
-    });
+  test('all undefined', () => {
+    expect(buildPathHash({ a: undefined, b: undefined })).toStrictEqual('');
   });
 
-  test('resource has queries', () => {
-    expect(parsePathHash('#foo?id=1#bar#baz?name=foo&type=bar')).toStrictEqual({
-      resources: ['foo?id=1', 'bar', 'baz?name=foo&type=bar'],
-      rawResources: 'foo?id=1#bar#baz?name=foo&type=bar',
-      params: {},
-    });
+  test('undefined filtered', () => {
+    expect(buildPathHash({ a: undefined, b: null, c: 0 })).toStrictEqual(
+      '#b=null~c=0'
+    );
+  });
+
+  test('primary values', () => {
+    expect(
+      buildPathHash({
+        a: null,
+        b: '',
+        c: '1',
+        d: 1,
+        e: true,
+        f: false,
+      })
+    ).toStrictEqual('#a=null~b=~c=1~d=1~e=true~f=false');
+  });
+
+  test('filter invalid key', () => {
+    expect(buildPathHash({ a: '1', a1: '2', a_b: '3', '': '4' })).toStrictEqual(
+      '#a=1'
+    );
+  });
+
+  test('keep special characters', () => {
+    expect(
+      buildPathHash({ a: 'hello world', b: 'x=y', c: 'a~b' })
+    ).toStrictEqual('#a=hello world~b=x=y~c=a~b');
   });
 });

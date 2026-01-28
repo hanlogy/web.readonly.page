@@ -11,7 +11,7 @@ export function parseSidebar(text: string): SidebarItem[] {
 
   const ast = unified().use(remarkParse).parse(text);
 
-  // Only accept the first TOP-LEVEL list, ignore everything else.
+  // Only accept the first top-level list, ignore everything else.
   const topLevelList = ast.children.find(isList);
   if (!topLevelList) {
     return [];
@@ -25,19 +25,30 @@ function parseList(list: List): SidebarItem[] {
 }
 
 /**
- * - A list item is valid ONLY if it contains a supported link label itself.
- * - If a parent item has no link, ignore the entire subtree under it (children
- *   are not promoted).
+ * - A list item is valid if it contains a supported link label OR a plain-text
+ *   label.
+ * - If it has neither, ignore the entire subtree under it (children are not
+ *   promoted).
  */
 function parseListItem(listItem: ListItem): SidebarItem | null {
+  const children = listItem.children.filter(isList).flatMap(parseList);
+
   const link = extractLink(listItem);
-  if (!link) {
+  if (link) {
+    return {
+      ...link,
+      children,
+    };
+  }
+
+  const text = extractPlainLabel(listItem);
+  if (!text) {
     return null;
   }
 
   return {
-    ...link,
-    children: listItem.children.filter(isList).flatMap(parseList),
+    text,
+    children,
   };
 }
 
@@ -60,6 +71,36 @@ function extractLink(
   return text ? { text, link: link.url } : null;
 }
 
+function extractPlainLabel(listItem: ListItem): string {
+  const text =
+    listItem.children
+      .filter((child) => !isList(child))
+      .map(plainTextIfPlain)
+      .find((e) => e !== '') ?? '';
+
+  return text;
+}
+
+function plainTextIfPlain(node: Node): string {
+  if (isText(node)) {
+    return node.value.replace(/\s+/g, ' ').trim();
+  }
+
+  if (!isParent(node)) {
+    return '';
+  }
+
+  if (!node.children.every(isText)) {
+    return '';
+  }
+
+  return node.children
+    .map((child) => child.value)
+    .join('')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function findFirstSupportedLink(node: Node): Link | null {
   if (isLink(node) && linkTextIfPlain(node)) {
     return node;
@@ -71,9 +112,9 @@ function findFirstSupportedLink(node: Node): Link | null {
 
   return (
     node.children
-      .filter((c) => !isList(c))
+      .filter((child) => !isList(child))
       .map(findFirstSupportedLink)
-      .find((l): l is Link => l !== null) ?? null
+      .find((link) => link !== null) ?? null
   );
 }
 
