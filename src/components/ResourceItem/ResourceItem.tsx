@@ -5,7 +5,7 @@ import { Actions } from './Actions';
 
 export function ResourceItem({ resource }: { resource: Resource }) {
   const { name, type, description } = resource;
-  const url =
+  const href =
     type === 'file'
       ? `url=${resource.url}`
       : `base=${resource.baseUrl}~file=${resource.entryFile}`;
@@ -15,7 +15,7 @@ export function ResourceItem({ resource }: { resource: Resource }) {
       <div className="absolute top-3 right-3">
         <Actions resource={resource} />
       </div>
-      <Link to={{ pathname: type, hash: `#${url}` }} className="contents">
+      <Link to={{ pathname: type, hash: `#${href}` }} className="contents">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-200 sm:h-12 sm:w-12">
           {type === 'collection' ? (
             <BookTextIcon />
@@ -28,7 +28,7 @@ export function ResourceItem({ resource }: { resource: Resource }) {
             {name}
           </div>
           <div className="overflow-hidden text-sm text-ellipsis whitespace-nowrap text-gray-500">
-            {url}
+            {type === 'file' ? resource.url : resource.baseUrl}
           </div>
           <div className="mt-1 flex-1 leading-6 text-gray-400">
             {description}
