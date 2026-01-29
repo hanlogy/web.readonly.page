@@ -71,7 +71,10 @@ export async function getResource(id: string): Promise<Resource | undefined> {
 
 export async function getResources(): Promise<Resource[]> {
   const db = await openDB();
-  return db.getAll('resources');
+  const list = await db.getAll('resources');
+  list.sort((A, B) => (A.createdAt > B.createdAt ? -1 : 1));
+
+  return list;
 }
 
 export async function clearResources(): Promise<void> {

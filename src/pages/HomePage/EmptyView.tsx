@@ -1,70 +1,66 @@
 import { useState } from 'react';
-import { getExtensionFromUrl } from '@/helpers/getExtensionFromUrl';
+import { ResourceInput } from '@/components/ResourceInput';
+import type { ResourceType } from '@/definitions/types';
 import { useNavigate } from '@/lib/router';
-import { Button } from '@/packages/react-dom-lib';
+import { buildPathHash } from '@/lib/router/helpers';
+import { useUpsertResourceMutation } from '@/operations/useUpsertResourceMutation';
+import { Button, useForm } from '@/packages/react-dom-lib';
+
+interface FormData {
+  readonly url?: string;
+  readonly baseUrl?: string;
+  readonly entryFile?: string;
+}
 
 export function EmptyView() {
-  const [url, setUrl] = useState<string>('');
+  const [type, setType] = useState<ResourceType>('file');
+  const { register, handleSubmit } = useForm<FormData>();
   const navigate = useNavigate();
-  const [urlError, setUrlError] = useState<string | null>(null);
+  const { upsertResource } = useUpsertResourceMutation({ type });
 
-  const handleReadUrl = () => {
-    setUrlError(null);
-    const trimedUrl = url.trim();
-    if (!trimedUrl) {
-      return;
-    }
-
-    if (!isUrl(trimedUrl)) {
-      setUrlError('Not a valid url');
-      return;
-    }
-
-    if (getExtensionFromUrl(trimedUrl) !== 'md') {
-      setUrlError(
-        'We can read only .md file, will support more file types later'
-      );
-      return;
-    }
+  const onSubmit = async (formData: FormData) => {
+    await upsertResource({
+      name: 'unnamed',
+      requiresAuth: false,
+      ...formData,
+    });
 
     navigate({
-      pathname: 'file',
-      hash: `#url=${trimedUrl}`,
+      pathname: type,
+      hash: buildPathHash({
+        url: formData.url,
+        base: formData.baseUrl,
+        file: formData.entryFile,
+      }),
     });
   };
 
   return (
-    <div className="mx-auto flex max-w-xl flex-col items-center p-8 text-center">
-      <div className="mb-10">
-        <div className="mb-4 text-xl font-medium text-gray-600">
-          No saved pages yet
-        </div>
-        <p className="text-sm text-neutral-600">
-          Click "Add page" (top right) to save your first page
-        </p>
-      </div>
+    <div className="mx-auto flex max-w-xl flex-col items-center py-4 text-center lg:pt-8">
       <div className="w-full">
-        <div className="mb-3">Or paste a document URL to read it directly.</div>
-        <input
-          onChange={(e) => setUrl(e.currentTarget.value)}
-          placeholder="Paste a URL… Only support .md files now"
-          className="h-12 w-full rounded-lg border border-gray-300 px-2 text-sm"
-        />
-        {urlError && <div className="mt-2 text-red-600">{urlError}</div>}
-        <Button
-          type="button"
-          onClick={() => handleReadUrl()}
-          size="small"
-          className="mt-4 mb-6 bg-gray-600 px-12 font-medium text-white hover:opacity-80"
-        >
-          Read
-        </Button>
-        <p className="text-sm text-gray-500">
-          Runs locally in your browser. No tracking.
-        </p>
+        <div className="mb-2 text-2xl text-gray-600">
+          Read a file or a collection
+        </div>
+        <div className="text-sm text-gray-500">
+          Runs in your browser. No tracking.
+        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-10 space-y-8">
+          <ResourceInput
+            type={type}
+            onChangeType={setType}
+            register={register}
+          />
+          <Button
+            type="submit"
+            size="small"
+            className="mb-6 bg-gray-600 px-12 font-medium text-white hover:opacity-80"
+          >
+            Read
+          </Button>
+        </form>
         <a
           className="text-sm font-medium text-neutral-900 underline underline-offset-4 hover:opacity-80"
-          href="https://readonly.page/collection#https://about.readonly.page/docs/en-US#./privacy-policy.md"
+          href="https://readonly.page/collection#base=https://raw.githubusercontent.com/hanlogy/about.readonly.page/refs/heads/main/docs/en-US/~file=./privacy-policy.md"
         >
           How privacy works
         </a>
@@ -78,10 +74,4 @@ export function EmptyView() {
       </Button>
     </div>
   );
-}
-
-function isUrl(s: string): boolean {
-  const regExp =
-    /^(?:https?:\/\/)?(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}(?::\d{2,5})?(?:\/[^\s#]*)?(?:\?[^\s#]*)?$/i;
-  return regExp.test(s.trim());
 }

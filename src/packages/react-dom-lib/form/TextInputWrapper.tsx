@@ -18,7 +18,7 @@ export function TextInputWrapper({
   }, [setErrorListener]);
 
   return (
-    <div>
+    <div className="text-left">
       {label && (
         // We do not use label tag here, otherwise we need to manage the ids.
         <div className="mb-1 block pl-3 font-medium text-gray-600">{label}</div>

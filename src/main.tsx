@@ -2,9 +2,9 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Router } from '@/lib/router';
 import { DialogProvider, FlexCenter } from '@/packages/react-dom-lib';
+import { getResources } from '@/repositories/localDB';
+import { StoreProvider } from '@/states/store';
 import App from './App';
-import { getResources } from './repositories/localDB';
-import { StoreProvider } from './states/store';
 import './styles/index.css';
 
 const container = document.getElementById('root');
