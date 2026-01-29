@@ -1,4 +1,5 @@
 import type { ResourceType } from '@/definitions/types';
+import { getExtensionFromUrl } from '@/helpers/getExtensionFromUrl';
 import {
   ButtonGroup,
   clsx,
@@ -55,15 +56,15 @@ export function ResourceInput({
           <div>
             <TextInput
               label="Root URL"
-              helper="Folder where _sidebar.md is located"
+              helper="Folder containing _sidebar.md"
               controller={register('baseUrl', {
                 validator: ({ baseUrl }) => {
-                  if (!baseUrl?.trim()) {
+                  const url = baseUrl?.trim() ?? '';
+                  if (!url) {
                     return 'Root URL is required';
                   }
-                  if (/#/.test(baseUrl)) {
-                    return "Root URL must not contain '#'.";
-                  }
+
+                  return validateUrl(url);
                 },
               })}
             />
@@ -71,15 +72,13 @@ export function ResourceInput({
           <div>
             <TextInput
               label="Start page path"
-              helper="Relative to Root URL, e.g. README.md or ./README.md"
+              helper="Relative to Root URL, e.g. README.md"
               controller={register('entryFile', {
                 validator: ({ entryFile }) => {
                   if (!entryFile?.trim()) {
                     return 'Start page is required';
                   }
-                  if (/#/.test(entryFile)) {
-                    return "Start page path must not contain '#'.";
-                  }
+                  return validateExtension(entryFile);
                 },
               })}
             />
@@ -88,15 +87,15 @@ export function ResourceInput({
       ) : (
         <div>
           <TextInput
-            label="Document URL"
+            label="File URL"
             controller={register('url', {
               validator: ({ url }) => {
-                if (!url?.trim()) {
-                  return 'URL is required';
+                url = url?.trim() ?? '';
+                if (!url) {
+                  return 'File URL is required';
                 }
-                if (/#/.test(url)) {
-                  return "URL must not contain '#'.";
-                }
+
+                return validateUrl(url) || validateExtension(url);
               },
             })}
           />
@@ -104,4 +103,16 @@ export function ResourceInput({
       )}
     </>
   );
+}
+
+function validateUrl(url: string): undefined | string {
+  if (!url.trim()) {
+    return 'Not a valid URL';
+  }
+}
+
+function validateExtension(ref: string) {
+  return getExtensionFromUrl(ref) === 'md'
+    ? undefined
+    : 'Unsupported file type. Only .md is supported for now.';
 }
