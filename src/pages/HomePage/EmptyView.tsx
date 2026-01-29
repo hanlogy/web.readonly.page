@@ -35,14 +35,6 @@ export function EmptyView() {
 
   return (
     <div className="mx-auto flex max-w-xl flex-col items-center p-8 text-center">
-      <div className="mb-10">
-        <div className="mb-4 text-xl font-medium text-gray-600">
-          No saved pages yet
-        </div>
-        <p className="text-sm text-neutral-600">
-          Click "Add page" (top right) to save your first page
-        </p>
-      </div>
       <div className="w-full">
         <div className="mb-3">Or paste a document URL to read it directly.</div>
         <input

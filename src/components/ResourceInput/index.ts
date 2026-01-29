@@ -1,0 +1,1 @@
+export { ResourceInput } from './ResourceInput';
