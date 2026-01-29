@@ -1,43 +1,35 @@
 # readonly.page
 
-[`readonly.page`](http://readonly.page) is a Single Page Application (SPA) that
-fetches content directly from URLs you provide and renders it in your browser.
-The server only serves the app code (HTML/JS/CSS) — it never sees your
-documents.
+[`readonly.page`](http://readonly.page) is a simple viewer for documents stored
+on the web.
 
-Currently it supports **Markdown**. More formats are planned.
+You give it a URL to a Markdown file (more formats will be supported later).
+Your browser fetch the file and shows it as a readable page.
 
-It supports two target types:
+It can read docs organized in two ways:
 
-1. **Single document**
-2. **Collection** (a directory that contains a `_sidebar.md`)
+1. **Single file:** one document from one URL
+2. **Collection**: a folder of documents that includes a `_sidebar.md` for
+   navigation
 
-## Why
+## Why use it
 
-- **Bring Your Own Data:** your content stays where it already lives (GitHub,
-  S3, your server, etc.)
-- **privacy:** no server-side storage of your content or visited URLs
-- **Portable:** configuration lives in your browser and can be exported/imported
+- **Bring Your Own Data:** keep files where they already are (GitHub, S3, your
+  own server, and so on)
+- **privacy:** no server-side storage, and the server does not see which URLs
+  you read
+- **Portable:** your setup is saved in your browser and can be exported/imported
   as a JSON file
 
 ## How it works
 
-### Core philosophy: BYOD + privacy-first
-
-- **Client-side SPA:** everything runs in the browser
-- **No proxying:** the browser fetches content directly from your URLs
-- **URL privacy:** target URLs are stored in the URL hash (`#...`), so they are
-  not sent to the server in normal requests
-- **No backend database:** all state is stored locally in the browser (e.g.
+- **Runs in the browser:** rendering happens on your device
+- **Direct fetching:** the browser loads files straight from your URLs (no
+  proxy)
+- **URL privacy:** the target URL is stored after `#` in the page address, so it
+  is not sent to the server.
+- **Local storage only:** settings and state are saved in your browser (e.g.
   `localStorage`, `IndexedDB`)
-
-### UX flow
-
-1. **Initial load:** a clean “Get Started” screen.
-2. **Add pages:** add target URLs (single files or collections).
-3. **Persistent:** reopen the site later and it restores from local browser
-   storage.
-4. **Portable:** export config to JSON and import it elsewhere.
 
 ## Tech Stack
 
