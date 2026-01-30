@@ -1,7 +1,7 @@
 import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react';
 import { parseSidebar } from '@/lib/markdown';
 import type { SidebarItem } from '@/lib/markdown/types';
-import { Link, usePath } from '@/lib/router';
+import { Link } from '@/lib/router';
 import { buildPathHash } from '@/lib/router/helpers';
 import { clsx, CollapsibleTree, IconButton } from '@/packages/react-dom-lib';
 
@@ -37,8 +37,6 @@ function SidebarButton({
   isCollapsed: boolean;
   baseUrl: string;
 }) {
-  const { pathname } = usePath();
-
   return (
     <div
       className={clsx('flex h-9 w-full items-center text-left text-gray-600')}
@@ -46,7 +44,7 @@ function SidebarButton({
       {item.link ? (
         <Link
           to={{
-            pathname,
+            pathname: 'read',
             hash: buildPathHash({ base: baseUrl, file: item.link }),
           }}
           className="flex-1 pl-2 text-gray-500 hover:text-gray-700"

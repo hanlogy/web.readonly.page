@@ -1,4 +1,3 @@
-import type { ResourceType } from '@/definitions/types';
 import { ensureUrlProtocol } from '@/helpers/ensureUrlProtocol';
 import { getExtensionFromUrl } from '@/helpers/getExtensionFromUrl';
 import { parsePathHash } from '@/lib/router/helpers';
@@ -6,7 +5,7 @@ import { usePath } from '@/lib/router/hooks';
 import { resolveWithBaseUrl } from '@/packages/ts-lib';
 import { PageView } from './ReaderView';
 
-export function ReaderPage({ type }: { type: ResourceType }) {
+export function ReaderPage() {
   const { hash } = usePath();
   const {
     file: fileParam,
@@ -16,11 +15,10 @@ export function ReaderPage({ type }: { type: ResourceType }) {
 
   const notFound = () => <>Page not found</>;
 
-  if (
-    (type !== 'collection' && type !== 'file') ||
-    (type === 'file' && !urlParam) ||
-    (type === 'collection' && (!baseParam || !fileParam))
-  ) {
+  const type =
+    baseParam && fileParam ? 'collection' : urlParam ? 'file' : undefined;
+
+  if (!type) {
     return notFound();
   }
 
