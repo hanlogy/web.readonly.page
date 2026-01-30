@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ClipboardCheckIcon, ClipboardIcon } from 'lucide-react';
+import { buildPathHash } from '@/lib/router/helpers';
 import {
   Button,
   clsx,
@@ -18,14 +19,15 @@ export function ShareResourceDialog({
     | { type: 'collection'; baseUrl: string; file: string };
 }) {
   const [copied, setCopied] = useState(false);
-  let hash: string[] = [];
+  //let hash: string[] = [];
+  let params: Record<string, string> = {};
 
   if (resource.type === 'collection') {
-    hash = [resource.baseUrl, resource.file];
+    params = { base: resource.baseUrl, file: resource.file };
   } else {
-    hash = [resource.url];
+    params = { url: resource.url };
   }
-  const url = `${window.location.origin}/${resource.type}#` + hash.join('#');
+  const url = `${window.location.origin}/read` + buildPathHash(params);
 
   return (
     <Dialog

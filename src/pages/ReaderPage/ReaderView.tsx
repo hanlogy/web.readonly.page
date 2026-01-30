@@ -12,6 +12,7 @@ import {
   Page,
   useDialog,
 } from '@/packages/react-dom-lib';
+import { resolveWithBaseUrl } from '@/packages/ts-lib';
 import { createHttpClient } from '@/packages/ts-lib/http';
 import { MarkdownViewer } from './MarkdownViewer';
 import { Sidebar } from './Sidebar';
@@ -39,10 +40,12 @@ export function PageView({
 
   const linkHrefBuilder = useCallback(
     (ref: string) => {
-      return [
-        type,
-        type === 'file' ? ref : buildPathHash({ base: baseUrl, file: ref }),
-      ].join('');
+      const params =
+        type === 'collection'
+          ? { base: baseUrl, file: ref }
+          : { url: resolveWithBaseUrl({ base: baseUrl, ref }) };
+
+      return `read${buildPathHash(params)}`;
     },
     [baseUrl, type]
   );

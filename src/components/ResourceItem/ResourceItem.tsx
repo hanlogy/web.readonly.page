@@ -15,7 +15,7 @@ export function ResourceItem({ resource }: { resource: Resource }) {
       <div className="absolute top-3 right-3">
         <Actions resource={resource} />
       </div>
-      <Link to={{ pathname: type, hash: `#${href}` }} className="contents">
+      <Link to={{ pathname: 'read', hash: `#${href}` }} className="contents">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-200 sm:h-12 sm:w-12">
           {type === 'collection' ? (
             <BookTextIcon />

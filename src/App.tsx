@@ -7,8 +7,7 @@ function App() {
   return (
     <>
       <Route path="/" element={<HomePage />} />
-      <Route path="/file" element={<ReaderPage type="file" />} />
-      <Route path="/collection" element={<ReaderPage type="collection" />} />
+      <Route path="/read" element={<ReaderPage />} />
       <Route path="/resource-editor" element={<ResourceEditorPage />} />
     </>
   );
