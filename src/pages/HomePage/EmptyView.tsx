@@ -26,7 +26,7 @@ export function EmptyView() {
     });
 
     navigate({
-      pathname: type,
+      pathname: 'read',
       hash: buildPathHash({
         url: formData.url,
         base: formData.baseUrl,
@@ -60,7 +60,7 @@ export function EmptyView() {
         </form>
         <a
           className="text-sm font-medium text-neutral-900 underline underline-offset-4 hover:opacity-80"
-          href="https://readonly.page/collection#base=https://raw.githubusercontent.com/hanlogy/about.readonly.page/refs/heads/main/docs/en-US/~file=./privacy-policy.md"
+          href="https://readonly.page/read#base=https://raw.githubusercontent.com/hanlogy/about.readonly.page/refs/heads/main/docs/en-US/~file=./privacy-policy.md"
         >
           How privacy works
         </a>
