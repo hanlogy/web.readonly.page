@@ -36,12 +36,7 @@ It can read docs organized in two ways:
 - React 19
 - Tailwind CSS 4
 
-## Self-hosting
-
-`readonly.page` is a static Single Page Application (SPA). You can host it
-anywhere that can serve static files. There is no backend and no database.
-
-### Run locally (development)
+## Development
 
 ```bash
 git clone git@github.com:hanlogy/web.readonly.page.git
@@ -49,6 +44,11 @@ cd web.readonly.page
 npm install
 npm run dev
 ```
+
+## Self-hosting
+
+`readonly.page` is a static Single Page Application (SPA). You can host it
+anywhere that can serve static files. There is no backend and no database.
 
 ### Build for production
 
