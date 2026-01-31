@@ -29,7 +29,7 @@ function normalizeFile(file: string) {
   return file;
 }
 
-export function buildReadurl(
+export function buildReadUrl(
   resource: Readonly<{ url: string } | { base: string; file: string }>,
   {
     protocol = window.location.protocol,
