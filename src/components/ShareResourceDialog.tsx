@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ClipboardCheckIcon, ClipboardIcon } from 'lucide-react';
-import { buildPathHash } from '@/lib/router/helpers';
+import { buildReadUrl } from '@/helpers/buildReadUrl';
 import {
   Button,
   clsx,
@@ -19,15 +19,14 @@ export function ShareResourceDialog({
     | { type: 'collection'; baseUrl: string; file: string };
 }) {
   const [copied, setCopied] = useState(false);
-  //let hash: string[] = [];
-  let params: Record<string, string> = {};
 
+  let readParams: Parameters<typeof buildReadUrl>[0];
   if (resource.type === 'collection') {
-    params = { base: resource.baseUrl, file: resource.file };
+    readParams = { base: resource.baseUrl, file: resource.file };
   } else {
-    params = { url: resource.url };
+    readParams = { url: resource.url };
   }
-  const url = `${window.location.origin}/read` + buildPathHash(params);
+  const url = `${window.location.origin}` + buildReadUrl(readParams).readUrl;
 
   return (
     <Dialog

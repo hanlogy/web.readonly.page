@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { HouseIcon, MenuIcon, Share2Icon, XIcon } from 'lucide-react';
 import { ShareResourceDialog } from '@/components/ShareResourceDialog';
 import type { ResourceType } from '@/definitions/types';
+import { buildReadUrl } from '@/helpers/buildReadUrl';
 import { useNavigate } from '@/lib/router';
-import { buildPathHash } from '@/lib/router/helpers';
 import {
   Button,
   clsx,
@@ -40,12 +40,11 @@ export function PageView({
 
   const linkHrefBuilder = useCallback(
     (ref: string) => {
-      const params =
+      return buildReadUrl(
         type === 'collection'
           ? { base: baseUrl, file: ref }
-          : { url: resolveWithBaseUrl({ base: baseUrl, ref }) };
-
-      return `read${buildPathHash(params)}`;
+          : { url: resolveWithBaseUrl({ base: baseUrl, ref }) }
+      ).readUrl;
     },
     [baseUrl, type]
   );

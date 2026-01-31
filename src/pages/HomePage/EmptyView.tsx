@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ResourceInput } from '@/components/ResourceInput';
 import type { ResourceType } from '@/definitions/types';
+import { buildReadUrl } from '@/helpers/buildReadUrl';
 import { useNavigate } from '@/lib/router';
-import { buildPathHash } from '@/lib/router/helpers';
 import { useUpsertResourceMutation } from '@/operations/useUpsertResourceMutation';
 import { Button, useForm } from '@/packages/react-dom-lib';
 
@@ -25,14 +25,21 @@ export function EmptyView() {
       ...formData,
     });
 
-    navigate({
-      pathname: type,
-      hash: buildPathHash({
-        url: formData.url,
-        base: formData.baseUrl,
-        file: formData.entryFile,
-      }),
-    });
+    let resource: Parameters<typeof buildReadUrl>[0];
+    const { url, baseUrl, entryFile } = formData;
+    if (type === 'file') {
+      if (!url) {
+        return;
+      }
+      resource = { url };
+    } else {
+      if (!baseUrl || !entryFile) {
+        return;
+      }
+      resource = { base: baseUrl, file: entryFile };
+    }
+
+    navigate(buildReadUrl(resource));
   };
 
   return (
@@ -60,7 +67,7 @@ export function EmptyView() {
         </form>
         <a
           className="text-sm font-medium text-neutral-900 underline underline-offset-4 hover:opacity-80"
-          href="https://readonly.page/collection#base=https://raw.githubusercontent.com/hanlogy/about.readonly.page/refs/heads/main/docs/en-US/~file=./privacy-policy.md"
+          href="https://readonly.page/read#base=docs.readonly.page/en-US/~file=home.md"
         >
           How privacy works
         </a>

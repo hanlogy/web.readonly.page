@@ -1,5 +1,8 @@
 # readonly.page
 
+_Read this `README.md` in readonly.page_:
+[**_Open_**](https://readonly.page/read#url=raw.githubusercontent.com/hanlogy/web.readonly.page/refs/heads/main/README.md)
+
 [`readonly.page`](http://readonly.page) is a simple viewer for documents stored
 on the web.
 
