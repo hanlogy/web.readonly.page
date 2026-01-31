@@ -1,8 +1,8 @@
 import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react';
+import { buildReadUrl } from '@/helpers/buildReadUrl';
 import { parseSidebar } from '@/lib/markdown';
 import type { SidebarItem } from '@/lib/markdown/types';
 import { Link } from '@/lib/router';
-import { buildPathHash } from '@/lib/router/helpers';
 import { clsx, CollapsibleTree, IconButton } from '@/packages/react-dom-lib';
 
 export function Sidebar({ text, baseUrl }: { text: string; baseUrl: string }) {
@@ -43,10 +43,7 @@ function SidebarButton({
     >
       {item.link ? (
         <Link
-          to={{
-            pathname: 'read',
-            hash: buildPathHash({ base: baseUrl, file: item.link }),
-          }}
+          to={buildReadUrl({ base: baseUrl, file: item.link })}
           className="flex-1 pl-2 text-gray-500 hover:text-gray-700"
         >
           {item.text}

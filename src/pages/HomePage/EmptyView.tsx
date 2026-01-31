@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ResourceInput } from '@/components/ResourceInput';
 import type { ResourceType } from '@/definitions/types';
+import { buildReadUrl } from '@/helpers/buildReadUrl';
 import { useNavigate } from '@/lib/router';
-import { buildPathHash } from '@/lib/router/helpers';
 import { useUpsertResourceMutation } from '@/operations/useUpsertResourceMutation';
 import { Button, useForm } from '@/packages/react-dom-lib';
 
@@ -25,14 +25,21 @@ export function EmptyView() {
       ...formData,
     });
 
-    navigate({
-      pathname: 'read',
-      hash: buildPathHash({
-        url: formData.url,
-        base: formData.baseUrl,
-        file: formData.entryFile,
-      }),
-    });
+    let resource: Parameters<typeof buildReadUrl>[0];
+    const { url, baseUrl, entryFile } = formData;
+    if (type === 'file') {
+      if (!url) {
+        return;
+      }
+      resource = { url };
+    } else {
+      if (!baseUrl || !entryFile) {
+        return;
+      }
+      resource = { base: baseUrl, file: entryFile };
+    }
+
+    navigate(buildReadUrl(resource));
   };
 
   return (

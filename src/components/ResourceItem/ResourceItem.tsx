@@ -1,21 +1,24 @@
 import { BookTextIcon, FileIcon } from 'lucide-react';
 import type { Resource } from '@/definitions/types';
+import { buildReadUrl } from '@/helpers/buildReadUrl';
 import { Link } from '@/lib/router';
 import { Actions } from './Actions';
 
 export function ResourceItem({ resource }: { resource: Resource }) {
   const { name, type, description } = resource;
-  const href =
+
+  const to = buildReadUrl(
     type === 'file'
-      ? `url=${resource.url}`
-      : `base=${resource.baseUrl}~file=${resource.entryFile}`;
+      ? { url: resource.url }
+      : { base: resource.baseUrl, file: resource.entryFile }
+  );
 
   return (
     <div className="relative flex rounded-xl border border-gray-100 bg-gray-100 p-4 hover:border-gray-300">
       <div className="absolute top-3 right-3">
         <Actions resource={resource} />
       </div>
-      <Link to={{ pathname: 'read', hash: `#${href}` }} className="contents">
+      <Link to={to} className="contents">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-200 sm:h-12 sm:w-12">
           {type === 'collection' ? (
             <BookTextIcon />
