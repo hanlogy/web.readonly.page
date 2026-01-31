@@ -197,16 +197,7 @@ describe('resolveWithBaseUrl', () => {
     ).toBe('https://abc.com/d');
   });
 
-  test('base is not http', () => {
-    expect(
-      resolveWithBaseUrl({
-        base: 'file:///a/b',
-        ref: 'd',
-      })
-    ).toBe('d');
-  });
-
-  test('absolute url', () => {
+  test('ref is a url', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com/a/b/',
@@ -215,7 +206,7 @@ describe('resolveWithBaseUrl', () => {
     ).toBe('https://x.com/y');
   });
 
-  test('absolute path', () => {
+  test('ref is an absolute path', () => {
     expect(
       resolveWithBaseUrl({
         base: 'https://abc.com/a/b/',
@@ -249,5 +240,14 @@ describe('resolveWithBaseUrl', () => {
         ref: '../y',
       })
     ).toBe('//abc.com/a/y');
+  });
+
+  test('base has no scheme', () => {
+    expect(
+      resolveWithBaseUrl({
+        base: 'localhost/a/b/',
+        ref: '../y',
+      })
+    ).toBe('localhost/a/y');
   });
 });
