@@ -1,7 +1,6 @@
-# readonly.page
+[![Read on readonly.page](https://img.shields.io/badge/Read_on-Readonly.page-blue?style=for-the-badge)](https://readonly.page/read#url=raw.githubusercontent.com/hanlogy/web.readonly.page/refs/heads/main/README.md)
 
-_Read this `README.md` in readonly.page_:
-[**_Open_**](https://readonly.page/read#url=raw.githubusercontent.com/hanlogy/web.readonly.page/refs/heads/main/README.md)
+# Readonly.page
 
 [`readonly.page`](http://readonly.page) is a simple viewer for documents stored
 on the web.

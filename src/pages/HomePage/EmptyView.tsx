@@ -67,7 +67,7 @@ export function EmptyView() {
         </form>
         <a
           className="text-sm font-medium text-neutral-900 underline underline-offset-4 hover:opacity-80"
-          href="https://readonly.page/read#base=docs.readonly.page/en-US/~file=home.md"
+          href="https://readonly.page/read#base=docs.readonly.page/en-US/~file=privacy-policy.md"
         >
           How privacy works
         </a>
