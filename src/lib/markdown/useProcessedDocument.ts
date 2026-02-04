@@ -8,13 +8,16 @@ import {
 } from 'react';
 import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeReact from 'rehype-react';
+import remarkFrontmatter from 'remark-frontmatter';
 import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import remarkSlug from 'remark-slug';
 import { unified } from 'unified';
 import { CodeBlock } from './CodeBlock';
+import { MetadataBlock } from './MetadataBlock';
 import { collectToc } from './plugins/collectToc';
+import { metadataAstHandler } from './plugins/metadataAstHandler';
 import { resolveUrls } from './plugins/resolveUrls';
 import type { TocDepth, TocItem } from './types';
 
@@ -61,13 +64,19 @@ export function useProcessedDocument({
         const file = await unified()
           // text -> MDAST(markdown AST)
           .use(remarkParse)
+          // For metadata
+          .use(remarkFrontmatter, ['yaml'])
           // adds GitHub Flavored Markdown features
           .use(remarkGfm)
           // adds id attributes to headings
           .use(remarkSlug)
           .use(collectToc, { minDepth: tocMinDepth, maxDepth: tocMaxDepth })
           // MDAST -> HAST(HTML AST)
-          .use(remarkRehype)
+          .use(remarkRehype, {
+            handlers: {
+              yaml: metadataAstHandler,
+            },
+          })
           .use(resolveUrls, { baseUrl, linkHrefBuilder: buildHref })
           // Pretty code
           .use(rehypePrettyCode)
@@ -76,6 +85,7 @@ export function useProcessedDocument({
             ...production,
             components: {
               pre: CodeBlock,
+              metadata: MetadataBlock,
             },
           })
           .process(text);
