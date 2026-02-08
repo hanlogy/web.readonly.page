@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { createHttpClient, resolveWithBaseUrl } from '@hanlogy/ts-lib';
 import { HouseIcon, MenuIcon, Share2Icon, XIcon } from 'lucide-react';
 import { ShareResourceDialog } from '@/components/ShareResourceDialog';
 import type { ResourceType } from '@/definitions/types';
@@ -12,8 +13,6 @@ import {
   Page,
   useDialog,
 } from '@/packages/react-dom-lib';
-import { resolveWithBaseUrl } from '@/packages/ts-lib';
-import { createHttpClient } from '@/packages/ts-lib/http';
 import { MarkdownViewer } from './MarkdownViewer';
 import { Sidebar } from './Sidebar';
 import { getSidebarUrl } from './getSidebarUrl';

@@ -1,6 +1,6 @@
+import { resolveWithBaseUrl } from '@hanlogy/ts-lib';
 import type { Root, Element } from 'hast';
 import { visit } from 'unist-util-visit';
-import { resolveWithBaseUrl } from '@/packages/ts-lib';
 
 export function resolveUrls({
   baseUrl,

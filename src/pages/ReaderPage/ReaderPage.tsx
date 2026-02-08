@@ -1,8 +1,8 @@
+import { resolveWithBaseUrl } from '@hanlogy/ts-lib';
 import { ensureUrlProtocol } from '@/helpers/ensureUrlProtocol';
 import { getExtensionFromUrl } from '@/helpers/getExtensionFromUrl';
 import { parsePathHash } from '@/lib/router/helpers';
 import { usePath } from '@/lib/router/hooks';
-import { resolveWithBaseUrl } from '@/packages/ts-lib';
 import { PageView } from './ReaderView';
 
 export function ReaderPage() {

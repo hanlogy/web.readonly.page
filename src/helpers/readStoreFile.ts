@@ -1,6 +1,5 @@
+import { isJsonArray, isJsonRecord, type JsonValue } from '@hanlogy/ts-lib';
 import type { Resource } from '@/definitions/types';
-import { isJsonArray, isJsonRecord } from '@/packages/ts-lib';
-import type { JsonValue } from '@/packages/ts-lib/types';
 
 export async function readStoreFile(
   file: File
