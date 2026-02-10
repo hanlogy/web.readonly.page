@@ -1,10 +1,10 @@
 import { useState } from 'react';
+import { Button, useForm } from '@hanlogy/react-web-ui';
 import { ResourceInput } from '@/components/ResourceInput';
 import type { ResourceType } from '@/definitions/types';
 import { buildReadUrl } from '@/helpers/buildReadUrl';
 import { useNavigate } from '@/lib/router';
 import { useUpsertResourceMutation } from '@/operations/useUpsertResourceMutation';
-import { Button, useForm } from '@/packages/react-dom-lib';
 
 interface FormData {
   readonly url?: string;

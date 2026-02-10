@@ -1,9 +1,9 @@
+import { clsx, CollapsibleTree, IconButton } from '@hanlogy/react-web-ui';
 import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react';
 import { buildReadUrl } from '@/helpers/buildReadUrl';
 import { parseSidebar } from '@/lib/markdown';
 import type { SidebarItem } from '@/lib/markdown/types';
 import { Link } from '@/lib/router';
-import { clsx, CollapsibleTree, IconButton } from '@/packages/react-dom-lib';
 
 export function Sidebar({ text, baseUrl }: { text: string; baseUrl: string }) {
   const items = parseSidebar(text);

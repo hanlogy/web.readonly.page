@@ -1,5 +1,5 @@
+import { clsx } from '@hanlogy/react-web-ui';
 import { useProcessedDocument } from '@/lib/markdown';
-import { clsx } from '@/packages/react-dom-lib';
 import { TableOfContents } from './TableOfContents';
 
 export function MarkdownViewer({

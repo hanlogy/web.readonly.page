@@ -1,4 +1,10 @@
 import {
+  clsx,
+  DropdownMenu,
+  IconButton,
+  useDialog,
+} from '@hanlogy/react-web-ui';
+import {
   Edit2Icon,
   EllipsisVerticalIcon,
   Share2Icon,
@@ -6,12 +12,6 @@ import {
 } from 'lucide-react';
 import type { Resource } from '@/definitions/types';
 import { useNavigate } from '@/lib/router';
-import {
-  clsx,
-  DropdownMenu,
-  IconButton,
-  useDialog,
-} from '@/packages/react-dom-lib';
 import { deleteResource } from '@/repositories/localDB';
 import { useStoreDispatch } from '@/states/store';
 import { ShareResourceDialog } from '../ShareResourceDialog';
@@ -42,53 +42,57 @@ export function Actions({ resource }: { resource: Resource }) {
   const openConfirmDialog = useConfirmDialog();
   const { id, name } = resource;
 
+  const handleSelect = async (e: (typeof options)[number]['value']) => {
+    switch (e) {
+      case 'edit':
+        navigate({
+          pathname: 'resource-editor',
+          hash: id,
+        });
+        break;
+      case 'delete': {
+        const confirmed = await openConfirmDialog({
+          title: 'Delete page',
+          message: `"${name}" will be removed form list`,
+        });
+        if (confirmed === true) {
+          await deleteResource(id);
+          dispatch({
+            type: 'deleteResource',
+            payload: id,
+          });
+        }
+        break;
+      }
+      case 'share': {
+        openDialog(({ closeDialog }) => (
+          <ShareResourceDialog
+            resource={
+              resource.type === 'file'
+                ? {
+                    type: 'file',
+                    url: resource.url,
+                  }
+                : {
+                    type: 'collection',
+                    baseUrl: resource.baseUrl,
+                    file: resource.entryFile,
+                  }
+            }
+            closeDialog={closeDialog}
+          />
+        ));
+        break;
+      }
+    }
+  };
+
   return (
     <DropdownMenu
-      onSelect={async (e) => {
-        switch (e) {
-          case 'edit':
-            navigate({
-              pathname: 'resource-editor',
-              hash: id,
-            });
-            break;
-          case 'delete': {
-            const confirmed = await openConfirmDialog({
-              title: 'Delete page',
-              message: `"${name}" will be removed form list`,
-            });
-            if (confirmed === true) {
-              await deleteResource(id);
-              dispatch({
-                type: 'deleteResource',
-                payload: id,
-              });
-            }
-            break;
-          }
-          case 'share': {
-            openDialog(({ closeDialog }) => (
-              <ShareResourceDialog
-                resource={
-                  resource.type === 'file'
-                    ? {
-                        type: 'file',
-                        url: resource.url,
-                      }
-                    : {
-                        type: 'collection',
-                        baseUrl: resource.baseUrl,
-                        file: resource.entryFile,
-                      }
-                }
-                closeDialog={closeDialog}
-              />
-            ));
-            break;
-          }
-        }
-      }}
-      button={(show, isShown) => {
+      className="rounded-lg border border-gray-200 bg-white p-1 shadow-lg"
+      options={options}
+      alignment="bottomRight"
+      buttonBuilder={({ show, isShown }) => {
         return (
           <IconButton
             className={clsx({
@@ -100,8 +104,20 @@ export function Actions({ resource }: { resource: Resource }) {
           </IconButton>
         );
       }}
-      alignment="bottomRight"
-      options={options}
+      itemBuilder={({ item, close }) => {
+        return (
+          <button
+            className="w-full cursor-pointer rounded-sm px-5 py-2 text-left hover:bg-gray-200"
+            onClick={() => {
+              handleSelect(item.value);
+              close();
+            }}
+          >
+            {item.label}
+          </button>
+        );
+      }}
+      keyBuilder={({ value }) => value}
     />
   );
 }

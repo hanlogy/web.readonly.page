@@ -1,10 +1,11 @@
-import { downloadStore } from '@/helpers/downloadStore';
 import {
   Button,
-  Dialog,
   DialogActionBar,
+  DialogScaffold,
+  DialogTopbar,
   type CloseDialogFn,
-} from '@/packages/react-dom-lib';
+} from '@hanlogy/react-web-ui';
+import { downloadStore } from '@/helpers/downloadStore';
 import { useStoreState } from '@/states/store';
 
 export function ExportStoreDialog({
@@ -23,8 +24,13 @@ export function ExportStoreDialog({
   };
 
   return (
-    <Dialog
-      title="Export Pages"
+    <DialogScaffold
+      className="max-w-md rounded-[1.75rem] bg-white py-6 shadow-lg"
+      topbar={
+        <DialogTopbar className="text-xl font-medium text-gray-600">
+          Export Pages
+        </DialogTopbar>
+      }
       bottomBar={
         <DialogActionBar>
           {isNotEmpty && <Button onClick={() => handleExport()}>Export</Button>}
@@ -34,11 +40,13 @@ export function ExportStoreDialog({
         </DialogActionBar>
       }
     >
-      {isNotEmpty ? (
-        <>The exported file is a JSON file.</>
-      ) : (
-        <>You do not have saved pages yet.</>
-      )}
-    </Dialog>
+      <div className="px-6 pb-4 text-gray-600">
+        {isNotEmpty ? (
+          <>The exported file is a JSON file.</>
+        ) : (
+          <>You do not have saved pages yet.</>
+        )}
+      </div>
+    </DialogScaffold>
   );
 }

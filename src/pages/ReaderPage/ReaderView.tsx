@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import {
+  Button,
+  clsx,
+  FlexCenter,
+  IconButton,
+  useDialog,
+} from '@hanlogy/react-web-ui';
 import { createHttpClient, resolveWithBaseUrl } from '@hanlogy/ts-lib';
 import { HouseIcon, MenuIcon, Share2Icon, XIcon } from 'lucide-react';
 import { ShareResourceDialog } from '@/components/ShareResourceDialog';
 import type { ResourceType } from '@/definitions/types';
 import { buildReadUrl } from '@/helpers/buildReadUrl';
 import { useNavigate } from '@/lib/router';
-import {
-  Button,
-  clsx,
-  FlexCenter,
-  IconButton,
-  Page,
-  useDialog,
-} from '@/packages/react-dom-lib';
+import { Page } from '@/packages/react-dom-lib';
 import { MarkdownViewer } from './MarkdownViewer';
 import { Sidebar } from './Sidebar';
 import { getSidebarUrl } from './getSidebarUrl';

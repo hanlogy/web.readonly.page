@@ -1,11 +1,11 @@
-import type { ResourceType } from '@/definitions/types';
-import { getExtensionFromUrl } from '@/helpers/getExtensionFromUrl';
 import {
   ButtonGroup,
   clsx,
-  TextInput,
   type FormFieldRegister,
-} from '@/packages/react-dom-lib';
+} from '@hanlogy/react-web-ui';
+import type { ResourceType } from '@/definitions/types';
+import { getExtensionFromUrl } from '@/helpers/getExtensionFromUrl';
+import { TextField } from '../formFields';
 
 const typeItems = [
   { label: 'Single file', value: 'file' },
@@ -54,7 +54,7 @@ export function ResourceInput({
       {type === 'collection' ? (
         <>
           <div>
-            <TextInput
+            <TextField
               label="Root URL"
               helper="Folder containing _sidebar.md"
               controller={register('baseUrl', {
@@ -70,7 +70,7 @@ export function ResourceInput({
             />
           </div>
           <div>
-            <TextInput
+            <TextField
               label="Start page path"
               helper="Relative to Root URL, e.g. README.md"
               controller={register('entryFile', {
@@ -86,7 +86,7 @@ export function ResourceInput({
         </>
       ) : (
         <div>
-          <TextInput
+          <TextField
             label="File URL"
             controller={register('url', {
               validator: ({ url }) => {

@@ -8,8 +8,8 @@ import {
   type HTMLAttributes,
   type ReactElement,
 } from 'react';
+import { clsx } from '@hanlogy/react-web-ui';
 import { ClipboardCheckIcon, ClipboardIcon } from 'lucide-react';
-import { clsx } from '@/packages/react-dom-lib';
 
 export function CodeBlock({
   children,

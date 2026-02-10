@@ -1,17 +1,19 @@
 import {
   Button,
-  Dialog,
   DialogActionBar,
+  DialogScaffold,
+  DialogTopbar,
   useDialog,
-} from '@/packages/react-dom-lib';
+} from '@hanlogy/react-web-ui';
 
 export function useConfirmDialog() {
   const { openDialog } = useDialog();
 
   return ({ title, message }: { title?: string; message?: string } = {}) =>
     openDialog<boolean>(({ closeDialog }) => (
-      <Dialog
-        title={title}
+      <DialogScaffold
+        className="max-w-md rounded-[1.75rem] bg-white py-6 shadow-lg"
+        topbar={<DialogTopbar>{title}</DialogTopbar>}
         bottomBar={
           <DialogActionBar>
             <Button className="text-red-600" onClick={() => closeDialog(true)}>
@@ -27,6 +29,6 @@ export function useConfirmDialog() {
         }
       >
         {message}
-      </Dialog>
+      </DialogScaffold>
     ));
 }

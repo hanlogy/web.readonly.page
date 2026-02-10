@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
+import { clsx } from '@hanlogy/react-web-ui';
 import { SafeArea } from './SafeArea';
-import { clsx } from '../clsx';
 
 /**
  * NOTE:

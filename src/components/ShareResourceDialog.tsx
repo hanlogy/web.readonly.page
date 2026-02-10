@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { ClipboardCheckIcon, ClipboardIcon } from 'lucide-react';
-import { buildReadUrl } from '@/helpers/buildReadUrl';
 import {
   Button,
   clsx,
-  Dialog,
   DialogActionBar,
+  DialogScaffold,
+  DialogTopbar,
   type CloseDialogFn,
-} from '@/packages/react-dom-lib';
+} from '@hanlogy/react-web-ui';
+import { ClipboardCheckIcon, ClipboardIcon } from 'lucide-react';
+import { buildReadUrl } from '@/helpers/buildReadUrl';
 
 export function ShareResourceDialog({
   closeDialog,
@@ -29,8 +30,13 @@ export function ShareResourceDialog({
   const url = `${window.location.origin}` + buildReadUrl(readParams).readUrl;
 
   return (
-    <Dialog
-      title="Share"
+    <DialogScaffold
+      className="max-w-md rounded-[1.75rem] bg-white py-6 shadow-lg"
+      topbar={
+        <DialogTopbar className="text-xl font-medium text-gray-600">
+          Share
+        </DialogTopbar>
+      }
       bottomBar={
         <DialogActionBar>
           <Button
@@ -59,7 +65,9 @@ export function ShareResourceDialog({
         </DialogActionBar>
       }
     >
-      <div className="text-sm break-all text-gray-500">{url}</div>
-    </Dialog>
+      <div className="px-6 pb-4 text-gray-600">
+        <div className="text-sm break-all text-gray-500">{url}</div>
+      </div>
+    </DialogScaffold>
   );
 }

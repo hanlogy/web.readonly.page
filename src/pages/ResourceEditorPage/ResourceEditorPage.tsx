@@ -1,17 +1,16 @@
 import { useState } from 'react';
+import { Button, useForm } from '@hanlogy/react-web-ui';
 import { NavigateBackButton } from '@/components/NavigateBackButton';
 import { ResourceInput } from '@/components/ResourceInput';
+import {
+  CheckboxField,
+  TextareaField,
+  TextField,
+} from '@/components/formFields';
 import type { ResourceType } from '@/definitions/types';
 import { usePath, useNavigateBack } from '@/lib/router';
 import { useUpsertResourceMutation } from '@/operations/useUpsertResourceMutation';
-import {
-  Button,
-  CheckboxInput,
-  MultilineTextInput,
-  Page,
-  TextInput,
-  useForm,
-} from '@/packages/react-dom-lib';
+import { Page } from '@/packages/react-dom-lib';
 import { useStoreState } from '@/states/store';
 
 interface FormData {
@@ -62,7 +61,7 @@ export function ResourceEditorPage() {
         className="mx-auto mt-4 max-w-2xl space-y-8"
       >
         <div>
-          <TextInput
+          <TextField
             label="Name"
             controller={register('name', {
               validator: ({ name }) => {
@@ -75,14 +74,14 @@ export function ResourceEditorPage() {
         </div>
         <ResourceInput type={type} onChangeType={setType} register={register} />
         <div>
-          <MultilineTextInput
+          <TextareaField
             rows={4}
             label="Description"
             controller={register('description')}
           />
         </div>
         <div className="hidden">
-          <CheckboxInput
+          <CheckboxField
             label="Requires auth"
             controller={register('requiresAuth')}
           />

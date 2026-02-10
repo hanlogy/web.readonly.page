@@ -1,4 +1,4 @@
-import { clsx } from '../clsx';
+import { clsx } from '@hanlogy/react-web-ui';
 
 type T = Record<number, string>;
 

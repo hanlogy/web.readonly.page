@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { DialogProvider, FlexCenter } from '@hanlogy/react-web-ui';
 import { Router } from '@/lib/router';
-import { DialogProvider, FlexCenter } from '@/packages/react-dom-lib';
 import { getResources } from '@/repositories/localDB';
 import { StoreProvider } from '@/states/store';
 import App from './App';

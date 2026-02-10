@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { clsx } from '../clsx';
+import { clsx } from '@hanlogy/react-web-ui';
 import type { FormErrorListener } from './types';
 
 export function FormErrorMessage({

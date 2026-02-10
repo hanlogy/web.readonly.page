@@ -1,6 +1,6 @@
+import { clsx } from '@hanlogy/react-web-ui';
 import type { TocItem } from '@/lib/markdown/types';
 import { useAnchor } from '@/lib/router/hooks';
-import { clsx } from '@/packages/react-dom-lib';
 
 export function TableOfContents({ items }: { items: readonly TocItem[] }) {
   const { setAnchor, anchorId } = useAnchor();

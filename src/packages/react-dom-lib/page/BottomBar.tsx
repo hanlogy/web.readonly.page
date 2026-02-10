@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { clsx } from '../clsx';
 import { SafeArea } from './SafeArea';
+import { clsx } from '@hanlogy/react-web-ui';
 
 export const BottomBar = ({
   children,
