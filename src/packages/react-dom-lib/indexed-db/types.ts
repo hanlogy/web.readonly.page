@@ -10,6 +10,6 @@ export interface StoreConfig<T> {
   readonly indexes?: readonly IndexConfig<T>[];
 }
 
-export type StoreConfigs<S extends Record<string, unknown>> = {
-  [K in keyof S]: StoreConfig<S[K]>;
+export type StoreConfigs<SchemaT extends { [K in keyof SchemaT]: object }> = {
+  [K in keyof SchemaT]: StoreConfig<SchemaT[K]>;
 };

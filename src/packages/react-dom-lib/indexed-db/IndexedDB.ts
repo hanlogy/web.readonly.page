@@ -1,7 +1,7 @@
 import { requestToPromise, transactionDone } from './helpers';
 import type { StoreConfigs } from './types';
 
-export class IndexedDB<S extends Record<string, unknown>> {
+export class IndexedDB<SchemaT extends { [K in keyof SchemaT]: object }> {
   private constructor(db: IDBDatabase) {
     this.db = db;
 
@@ -11,7 +11,7 @@ export class IndexedDB<S extends Record<string, unknown>> {
 
   private db: IDBDatabase;
 
-  static async open<S extends Record<string, unknown>>({
+  static async open<SchemaT extends { [K in keyof SchemaT]: object }>({
     name,
     version,
     configs,
@@ -20,7 +20,7 @@ export class IndexedDB<S extends Record<string, unknown>> {
   }: {
     name: string;
     version: number;
-    configs: StoreConfigs<S>;
+    configs: StoreConfigs<SchemaT>;
     onBlocked?: () => void;
     onUpgrade?: (ctx: {
       db: IDBDatabase;
@@ -28,13 +28,13 @@ export class IndexedDB<S extends Record<string, unknown>> {
       oldVersion: number;
       newVersion: number | null;
     }) => void;
-  }): Promise<IndexedDB<S>> {
+  }): Promise<IndexedDB<SchemaT>> {
     const request = indexedDB.open(name, version);
 
     request.onupgradeneeded = (event) => {
       const db = request.result;
 
-      for (const storeName of Object.keys(configs)) {
+      for (const storeName in configs) {
         const config = configs[storeName];
 
         let store: IDBObjectStore;
@@ -70,14 +70,14 @@ export class IndexedDB<S extends Record<string, unknown>> {
     }
 
     const db = await requestToPromise(request);
-    return new IndexedDB<S>(db);
+    return new IndexedDB<SchemaT>(db);
   }
 
   close() {
     this.db.close();
   }
 
-  private async withStore<K extends keyof S, R>(
+  private async withStore<K extends keyof SchemaT, R>(
     store: K,
     mode: IDBTransactionMode,
     operation: (objectStore: IDBObjectStore) => IDBRequest<R>
@@ -99,32 +99,40 @@ export class IndexedDB<S extends Record<string, unknown>> {
     }
   }
 
-  async get<K extends keyof S>(
+  async get<K extends keyof SchemaT>(
     store: K,
     key: IDBValidKey
-  ): Promise<S[K] | undefined> {
-    const value = await this.withStore<K, S[K]>(store, 'readonly', (store) =>
-      store.get(key)
+  ): Promise<SchemaT[K] | undefined> {
+    const value = await this.withStore<K, SchemaT[K]>(
+      store,
+      'readonly',
+      (store) => store.get(key)
     );
 
     return value ?? undefined;
   }
 
-  async put<K extends keyof S>(store: K, value: S[K]): Promise<IDBValidKey> {
+  async put<K extends keyof SchemaT>(
+    store: K,
+    value: SchemaT[K]
+  ): Promise<IDBValidKey> {
     return this.withStore(store, 'readwrite', (store) => store.put(value));
   }
 
-  async delete<K extends keyof S>(store: K, key: IDBValidKey): Promise<void> {
+  async delete<K extends keyof SchemaT>(
+    store: K,
+    key: IDBValidKey
+  ): Promise<void> {
     await this.withStore(store, 'readwrite', (store) => store.delete(key));
   }
 
-  async getAll<K extends keyof S>(store: K): Promise<S[K][]> {
-    return this.withStore<K, S[K][]>(store, 'readonly', (store) =>
+  async getAll<K extends keyof SchemaT>(store: K): Promise<SchemaT[K][]> {
+    return this.withStore<K, SchemaT[K][]>(store, 'readonly', (store) =>
       store.getAll()
     );
   }
 
-  async clear<K extends keyof S>(store: K): Promise<void> {
+  async clear<K extends keyof SchemaT>(store: K): Promise<void> {
     await this.withStore(store, 'readwrite', (store) => store.clear());
   }
 }
